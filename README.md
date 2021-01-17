@@ -47,11 +47,17 @@ A full list of the snippets is [here](https://github.com/James-Yu/LaTeX-Workshop
 | `FBF`                                                                   | `\textbf{}`                          | Font BF. Cursor is set to be within the braces.                                                                           |
 | <kbd>Ctrl</kbd> + <kbd>L</kbd>, then <kbd>Ctrl</kbd> + <kbd>Enter</kbd> | Newline, and then `\item`.           | Useful for lists and enumerated lists.                                                                                    |
 
+Users who are further still familiar with the command line may choose `vim` or `emacs` with the VimTeX, or AUCTeX extensions respectively.
+
 ### Mathematical and Scientific Typesetting
 
 #### Multivariable and Vector Calculus
 
-`epreport.cls` imports the powerful [`physics`](http://mirrors.ibiblio.org/CTAN/macros/latex/contrib/physics/physics.pdf) package, which provides *dozens* of convenient macros for physics typesetting, from (partial, complete) differentials, bold-roman vectors and matrices, Dirac bra-ket notation, and matrix shortcuts, as well as macros to avoid excessive `\left` and `\right` strings in your source code. 
+`epreport.cls` imports the powerful [`physics`](http://mirrors.ibiblio.org/CTAN/macros/latex/contrib/physics/physics.pdf) package, which provides *dozens* of convenient macros for physics typesetting, from (partial, complete) differentials, bold-roman vectors and matrices, Dirac bra-ket notation, and matrix shortcuts, as well as macros to avoid excessive `\left` and `\right` strings in your source code. There is little point in merely repeating the documentation (hyperlinked above) here, as it is relatively short and concise. That said, a quick example will serve to demonstrate the sheer simplicity and readability of the source code for a (fairly) complicated expression:
+
+```LaTeX
+\oint_\mathcal{C} \vb{B}(\vb{r}, t)\cdot \dd{\vb*{\ell}} &= \mu_0\iint_\mathcal{S} \vb{J}(\vb{r}, t) \cdot \dd{\vb{a}} + \mu_0\varepsilon_0 \dv{t} \iint_\mathcal{S}\vb{E}(\vb{r}, t)\cdot \dd{\vb{a}}
+```
 
 ### Figures, Graphs, Images, and Tables
 
