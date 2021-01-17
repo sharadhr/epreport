@@ -51,7 +51,7 @@ A full list of the snippets is [here](https://github.com/James-Yu/LaTeX-Workshop
 
 #### Multivariable and Vector Calculus
 
-`epreport.cls` imports the powerful [`physics`](http://mirrors.ibiblio.org/CTAN/macros/latex/contrib/physics/physics.pdf) package, which provides *dozens* of convenient macros for physics typesetting
+`epreport.cls` imports the powerful [`physics`](http://mirrors.ibiblio.org/CTAN/macros/latex/contrib/physics/physics.pdf) package, which provides *dozens* of convenient macros for physics typesetting, from (partial, complete) differentials, bold-roman vectors and matrices, Dirac bra-ket notation, and matrix shortcuts, as well as macros to avoid excessive `\left` and `\right` strings in your source code. 
 
 ### Figures, Graphs, Images, and Tables
 
