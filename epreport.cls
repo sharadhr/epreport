@@ -8,6 +8,7 @@
 
 %%%%% FONTS & SYMBOLS %%%%%
 \RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -44,17 +45,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ifbool{islmodern}{
 	\RequirePackage{fix-cm}
-	\RequirePackage[rm={lining=true,tabular=false}]{cfr-lm}
+	\RequirePackage[
+		rm={tabular=true,lining=true},
+		sf={tabular=true,lining=true},
+		tt={monowidth=true}]{cfr-lm}
 	\RequirePackage{amsmath, amsfonts, amssymb}
 	%%%%% Define/redefine tabular-lining and oldstyle proportional figures
 	\robustify{\texttl}
 	\robustify{\textpo}
-	\providerobustcmd{\tablining}{\tlstyle}
-	\providerobustcmd{\propold}{\postyle}
+	\providerobustcmd{\tablining}{{\tlstyle}}
+	\providerobustcmd{\propold}{{\postyle}}
+	\providerobustcmd{\proplining}{{\plstyle}}
 	%%%%% Define bold small caps for header labels
-	\rmfamily
-	\DeclareFontShape{T1}{clm2}{b}{sc}{<->ssub*cmr/bx/sc}{}
-	\DeclareFontShape{T1}{clm2}{bx}{sc}{<->ssub*cmr/bx/sc}{}
+	% \DeclareFontShape{T1}{clm*}{b}{sc}{<->ssub*cmr/bx/sc}{}
+	% \DeclareFontShape{T1}{clm*}{bx}{sc}{<->ssub*cmr/bx/sc}{}
 	\providerobustcmd{\textlbl}[1]{\textsc{\textbf{#1}}}
 	%%%%% Define title style
 	\providerobustcmd{\texttitle}[1]{{\Huge\textlbl{#1}}}
@@ -77,8 +81,9 @@
 		%%%%% Define/redefine tabular-lining and oldstyle proportional figures
 		\providerobustcmd{\texttl}[1]{{\figureversion{tab}#1}}
 		\providerobustcmd{\textpo}[1]{{\figureversion{osf}#1}}
-		\providerobustcmd{\tablining}{\figureversion{tab}}
-		\providerobustcmd{\propold}{\figureversion{osf}}
+		\providerobustcmd{\tablining}{\figureversion{tab,lf}}
+		\providerobustcmd{\propold}{\figureversion{prop,osf}}
+		\providerobustcmd{\proplining}{\figureversion{prop,lf}}
 		% Define bold small caps for header labels
 		\providerobustcmd{\textlbl}[1]{\textsc{\textbf{#1}}}
 		% Define title style
@@ -119,6 +124,7 @@
 	%inter-unit-product =\cdot,
 	detect-weight=true,
 	detect-family=true,
+	detect-mode=true,
 	range-phrase=--,
 	range-units=single
 ]{siunitx}
@@ -283,10 +289,11 @@
 \setlist[enumerate, 1]{left=0pt,label=\arabic*.}
 
 %%%%% SET TABULAR FIGURES IN TABLES %%%%%
-\AtBeginEnvironment{tabularx}{
+\AtBeginEnvironment{tabular}{
 	\tablining
 	\sisetup{text-rm={\tablining}}
 }
+
 \renewrobustcmd{\tabularxcolumn}[1]{m{#1}}
 
 \setlength{\jot}{8pt}
