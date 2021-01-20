@@ -8,7 +8,6 @@
 
 %%%%% FONTS & SYMBOLS %%%%%
 \RequirePackage[utf8]{inputenc}
-\RequirePackage[T1]{fontenc}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -44,32 +43,18 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ifbool{islmodern}{
-	\RequirePackage{fix-cm}
-	\RequirePackage[
-		rm={tabular=true,lining=true},
-		sf={tabular=true,lining=true},
-		tt={monowidth=true}]{cfr-lm}
+	\RequirePackage{lmodern}
 	\RequirePackage{amsmath, amsfonts, amssymb}
-	%%%%% Define/redefine tabular-lining and oldstyle proportional figures
-	\robustify{\texttl}
-	\robustify{\textpo}
-	\providerobustcmd{\tablining}{{\tlstyle}}
-	\providerobustcmd{\propold}{{\postyle}}
-	\providerobustcmd{\proplining}{{\plstyle}}
-	%%%%% Define bold small caps for header labels
-	% \DeclareFontShape{T1}{clm*}{b}{sc}{<->ssub*cmr/bx/sc}{}
-	% \DeclareFontShape{T1}{clm*}{bx}{sc}{<->ssub*cmr/bx/sc}{}
-	\providerobustcmd{\textlbl}[1]{\textsc{\textbf{#1}}}
-	%%%%% Define title style
-	\providerobustcmd{\texttitle}[1]{{\Huge\textlbl{#1}}}
-	% \ClassWarning{astrochallenge}{lmodern is a compatibility option. Request support from the class author to get minionpro working}
+	%%%%% Define tabular-lining as nothing
+	\providerobustcmd{\tablining}{\relax}
+	\RequirePackage{esint}
 }{}
 
-% TODO: Complete Minion Pro XeTeX code
 \ifbool{ismpro}{
 	\ifpdftex
 		\RequirePackage[
 			onlytext,
+			minionint,
 			lf,
 			swash,
 			opticals,
@@ -78,17 +63,12 @@
 		\usepackage[withamsmath]{minionmath}
 		\usepackage{amsmath}
 		\usepackage{minionamsmath}
-		%%%%% Define/redefine tabular-lining and oldstyle proportional figures
-		\providerobustcmd{\texttl}[1]{{\figureversion{tab}#1}}
-		\providerobustcmd{\textpo}[1]{{\figureversion{osf}#1}}
+		%%%%% Define tabular-lining figures
 		\providerobustcmd{\tablining}{\figureversion{tab,lf}}
-		\providerobustcmd{\propold}{\figureversion{prop,osf}}
-		\providerobustcmd{\proplining}{\figureversion{prop,lf}}
-		% Define bold small caps for header labels
-		\providerobustcmd{\textlbl}[1]{\textsc{\textbf{#1}}}
-		% Define title style
-		\providerobustcmd{\texttitle}[1]{{\Huge\textssc{\textbf{#1}}}}
 		\renewcommand{\ttdefault}{lmtt}
+		% Use Minion Pro's swash script for \mathcal
+		\DeclareMathAlphabet\mathcal{T1}{\Mn@Math@Family}{m}{sw}
+		\SetMathAlphabet\mathcal{bold}{T1}{\Mn@Math@Family}{eb}{sw}
 	\fi
 }{}
 
@@ -99,8 +79,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%% FONTS & SYMBOLS %%%%%
-\RequirePackage{wasysym}
-\RequirePackage{esint}
+\RequirePackage[nointegrals]{wasysym}
 \RequirePackage{microtype}
 
 %%%%% GEOMETRY, PAGE SETUP, SPACING, PARAGRAPHING %%%%%
@@ -255,25 +234,25 @@
 \RequirePackage[
 	backend=biber,
 	language=british,
-    backref=true,
+	backref=true,
 	style=verbose-ieee,
-    bibstyle=numeric-comp,
-    citestyle=numeric-comp,
+	bibstyle=numeric-comp,
+	citestyle=numeric-comp,
 ]{biblatex}
 
 \DefineBibliographyStrings{english}{%
-    backrefpage = {page},% originally "cited on page"
-    backrefpages = {pages},% originally "cited on pages"
+	backrefpage = {page},% originally "cited on page"
+	backrefpages = {pages},% originally "cited on pages"
 }
 \DeclareCiteCommand{\supercite}[\mkbibsuperscript]
 {\iffieldundef{prenote}
-    {}
-    {\BibliographyWarning{Ignoring prenote argument}}%
-    \iffieldundef{postnote}
-    {}
-    {\BibliographyWarning{Ignoring postnote argument}}}
+	{}
+	{\BibliographyWarning{Ignoring prenote argument}}%
+	\iffieldundef{postnote}
+	{}
+	{\BibliographyWarning{Ignoring postnote argument}}}
 {\usebibmacro{citeindex}%
-    \bibopenbracket\usebibmacro{cite}\bibclosebracket}
+	\bibopenbracket\usebibmacro{cite}\bibclosebracket}
 {\supercitedelim}
 {}
 \let\cite=\supercite
