@@ -4,7 +4,7 @@
 \ProvidesClass{epreport}[21/01/16 NUS Experimental Physics report document class]
 
 %%%%% MISCELLANEOUS BUT PRIMARY IMPORTS %%%%%
-\RequirePackage{iftex,etoolbox,expl3,xparse}
+\RequirePackage{iftex,etoolbox,expl3,xparse,silence}
 
 %%%%% FONTS & SYMBOLS %%%%%
 \RequirePackage[utf8]{inputenc}
@@ -14,21 +14,36 @@
 % CLASS OPTIONS DECLARATION AND PROCESSING %%%%%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%% FONTS %%%%%
 \newbool{islmodern}
 \newbool{ismpro}
 \setbool{islmodern}{true}
-%%%%% FONTS %%%%%
 \DeclareOption{lmodern}{\booltrue{islmodern}}
 \DeclareOption{minionpro}{\booltrue{ismpro}\boolfalse{islmodern}}
 
+%%%%% ARTICLE OR REPORT %%%%%
+\newbool{isarticle}
+\newbool{isreport}
+\setbool{isarticle}{true}
+\DeclareOption{article}{\booltrue{isarticle}}
+\DeclareOption{report}{\booltrue{isreport}\boolfalse{isarticle}}
+
 %%%%% OTHER OPTIONS TO BE FORWARDED %%%%%
-\DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
+\DeclareOption*{
+	\PassOptionsToClass{\CurrentOption}{
+		\ifbool{isarticle}{article}{
+			\ifbool{isreport}{report}{}
+		}
+	}
+}
 
 %%%%% PROCESS THE OPTIONS %%%%%
 \ProcessOptions\relax
 
-%%%%% LOAD THE ARTICLE CLASS AS A BASE %%%%%
-\LoadClass{article}
+%%%%% LOAD THE APPROPRIATE CLASS AS A BASE %%%%%
+\ifbool{isarticle}{\LoadClass{article}}{}
+\ifbool{isreport}{\LoadClass{report}}{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -60,15 +75,17 @@
 			opticals,
 			footnotefigures
 		]{MinionPro}
-		\usepackage[withamsmath]{minionmath}
-		\usepackage{amsmath}
-		\usepackage{minionamsmath}
+		\RequirePackage[withamsmath]{minionmath}
+		\RequirePackage{amsmath}
+		\RequirePackage{minionamsmath}
 		%%%%% Define tabular-lining figures
 		\providerobustcmd{\tablining}{\figureversion{tab,lf}}
 		\renewcommand{\ttdefault}{lmtt}
 		% Use Minion Pro's swash script for \mathcal
 		\DeclareMathAlphabet\mathcal{T1}{\Mn@Math@Family}{m}{sw}
 		\SetMathAlphabet\mathcal{bold}{T1}{\Mn@Math@Family}{eb}{sw}
+		% Silence \arc redefined warning from pict2e
+		\WarningFilter*{pict2e}{\protect\arc\space redefined}
 	\fi
 }{}
 
@@ -79,9 +96,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%% FONTS & SYMBOLS %%%%%
+\RequirePackage[verbose=silent]{microtype}
 \RequirePackage[nointegrals]{wasysym}
-\RequirePackage{microtype}
-
+% Silence font shape warning from wasysym
+\WarningFilter{latexfont}{Font shape}
 %%%%% GEOMETRY, PAGE SETUP, SPACING, PARAGRAPHING %%%%%
 \RequirePackage[margin=2.5cm,a4paper]{geometry}
 \RequirePackage{titlesec}
@@ -154,12 +172,12 @@
 \tcbset{
 	shield externalize,
 	highlight math style={
-			enhanced,
-			colframe=red,
-			colback=white,
-			arc=0pt,
-			boxrule=1pt
-		}
+		enhanced,
+		colframe=red,
+		colback=white,
+		arc=0pt,
+		boxrule=1pt
+	}
 }
 
 %%%%% TIKZ CIRCLES %%%%%
@@ -171,7 +189,8 @@
 
 %%%%% REFERENCES AND LINKS %%%%%
 \RequirePackage{hyperref}
-\RequirePackage[noabbrev]{cleveref}
+\RequirePackage[noabbrev,capitalize]{cleveref}
+\RequirePackage{appendix}
 
 %%%%% MISCELLANEOUS %%%%%
 \RequirePackage[en-GB,showdow,calc]{datetime2}
@@ -204,19 +223,20 @@
 
 \creflabelformat{equation}{#2\textbf{(#1)}#3}
 \creflabelformat{figure}{#2\textbf{#1}#3}
+\creflabelformat{table}{#2\textbf{#1}#3}
 
-\crefname{equation}{\textbf{equation}}{\textbf{equations}}
-\Crefname{equation}{\textbf{Equation}}{\textbf{Equations}}
-\crefname{figure}{\textbf{Figure}}{\textbf{Figures}}
-\Crefname{figure}{\textbf{Figure}}{\textbf{Figures}}
-\crefname{table}{\textbf{Table}}{\textbf{Tables}}
-\Crefname{table}{\textbf{Table}}{\textbf{Tables}}
-\crefname{appendix}{\textbf{Appendix}}{\textbf{Appendices}}
-\Crefname{appendix}{\textbf{Appendix}}{\textbf{Appendices}}
-\crefname{section}{\textbf{\S}}{\textbf{\S}}
-\Crefname{section}{\textbf{\S}}{\textbf{\S}}
-\crefname{algorithm}{\textbf{Algorithm}}{\textbf{Algorithms}}
-\Crefname{algorithm}{\textbf{Algorithm}}{\textbf{Algorithms}}
+% \crefname{equation}{\textbf{equation}}{\textbf{equations}}
+% \Crefname{equation}{\textbf{Equation}}{\textbf{Equations}}
+% \crefname{figure}{\textbf{Figure}}{\textbf{Figures}}
+% \Crefname{figure}{\textbf{Figure}}{\textbf{Figures}}
+% \crefname{table}{\textbf{Table}}{\textbf{Tables}}
+% \Crefname{table}{\textbf{Table}}{\textbf{Tables}}
+% \crefname{appendix}{\textbf{Appendix}}{\textbf{Appendices}}
+% \Crefname{appendix}{\textbf{Appendix}}{\textbf{Appendices}}
+% \crefname{section}{\textbf{\S}}{\textbf{\S}}
+% \Crefname{section}{\textbf{\S}}{\textbf{\S}}
+% \crefname{algorithm}{\textbf{Algorithm}}{\textbf{Algorithms}}
+% \Crefname{algorithm}{\textbf{Algorithm}}{\textbf{Algorithms}}
 
 \hypersetup{
 	colorlinks	= true,			% Colours links instead of ugly boxes
@@ -224,6 +244,8 @@
 	linkcolor	= Magenta,		% Colour of internal links
 	citecolor	= Aquamarine	% Colour of citations
 }
+
+\AtBeginEnvironment{appendices}{\crefalias{section}{appendix}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -309,23 +331,85 @@
 \providerobustcmd*{\matricno}[1]{\renewcommand\@matricno{\textbf{#1}}}
 
 % REDUCE SPACE ABOVE TITLE
-\renewrobustcmd{\@maketitle}[1]{
-	\newpage
-	\null
-	\vspace{-1cm}
-	\begin{center}
-		\let \footnote \thanks
-		{\LARGE \@module \par \@title \par}
+\ifbool{isarticle}{
+	\renewrobustcmd{\@maketitle}[1]{
+		\newpage
+		\null
+		\vspace{-1cm}
+		\begin{center}
+			\let \footnote \thanks
+			{\LARGE \@module \par \@title \par}
+			\vskip 1.5em
+				{\large
+					\lineskip .5em
+					\begin{tabular}[t]{c}
+						\@author \\
+						\@matricno
+					\end{tabular}\par}
+			\vskip 1em
+				{\large \@date}
+		\end{center}
+		\par
 		\vskip 1.5em
-			{\large
-				\lineskip .5em
-				\begin{tabular}[t]{c}
-					\@author \\
-					\@matricno
-				\end{tabular}\par}
-		\vskip 1em
-			{\large \@date}
-	\end{center}
-	\par
-	\vskip 1.5em
-}
+	}
+}{}
+
+\ifbool{isreport}{
+	\ifbool{@titlepage}{
+		\renewcommand\maketitle{
+			\begin{titlepage}%
+				\let\footnotesize\small
+				\let\footnoterule\relax
+				\let \footnote \thanks
+				\null\vfil
+				\vskip 60\p@
+				\begin{center}%
+					{\Huge \@module \par \@title \par}%
+					\vskip 3em%
+						{\Large
+							\lineskip .75em%
+							\begin{tabular}[t]{c}%
+								\@author \\
+								\@matricno
+							\end{tabular}\par}%
+					\vskip 1.5em%
+						{\Large \@date \par}%       % Set date in \large size.
+				\end{center}\par
+				\@thanks
+				\vfil\null
+			\end{titlepage}%
+			\setcounter{footnote}{0}%
+			\global\let\thanks\relax
+			\global\let\maketitle\relax
+			\global\let\@thanks\@empty
+			\global\let\@author\@empty
+			\global\let\@date\@empty
+			\global\let\@title\@empty
+			\global\let\title\relax
+			\global\let\author\relax
+			\global\let\date\relax
+			\global\let\and\relax
+		}
+	}{
+		\renewrobustcmd{\@maketitle}[1]{
+			\newpage
+			\null
+			\vspace{-1cm}
+			\begin{center}
+				\let \footnote \thanks
+				{\LARGE \@module \par \@title \par}
+				\vskip 1.5em
+					{\Large
+						\lineskip .5em
+						\begin{tabular}[t]{c}
+							\@author \\
+							\@matricno
+						\end{tabular}\par}
+				\vskip 1em
+					{\Large \@date}
+			\end{center}
+			\par
+			\vskip 1.5em
+		}
+	}
+}{}
