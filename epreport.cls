@@ -60,6 +60,7 @@
 \ifbool{islmodern}{
 	\RequirePackage{lmodern}
 	\RequirePackage{amsmath, amsfonts, amssymb}
+	\pdfmapfile{=mlm-substitute.map}
 	%%%%% Define tabular-lining as nothing
 	\providerobustcmd{\tablining}{\relax}
 	\RequirePackage{esint}
@@ -221,28 +222,28 @@
 
 \crefdefaultlabelformat{#2\textbf{#1}#3}
 
-\creflabelformat{equation}{#2\textbf{(#1)}#3}
-\creflabelformat{figure}{#2\textbf{#1}#3}
-\creflabelformat{table}{#2\textbf{#1}#3}
+% \creflabelformat{equation}{#2\textbf{(#1)}#3}
+% \creflabelformat{figure}{#2\textbf{#1}#3}
+% \creflabelformat{table}{#2\textbf{#1}#3}
 
-% \crefname{equation}{\textbf{equation}}{\textbf{equations}}
-% \Crefname{equation}{\textbf{Equation}}{\textbf{Equations}}
-% \crefname{figure}{\textbf{Figure}}{\textbf{Figures}}
-% \Crefname{figure}{\textbf{Figure}}{\textbf{Figures}}
-% \crefname{table}{\textbf{Table}}{\textbf{Tables}}
-% \Crefname{table}{\textbf{Table}}{\textbf{Tables}}
-% \crefname{appendix}{\textbf{Appendix}}{\textbf{Appendices}}
-% \Crefname{appendix}{\textbf{Appendix}}{\textbf{Appendices}}
-% \crefname{section}{\textbf{\S}}{\textbf{\S}}
-% \Crefname{section}{\textbf{\S}}{\textbf{\S}}
-% \crefname{algorithm}{\textbf{Algorithm}}{\textbf{Algorithms}}
-% \Crefname{algorithm}{\textbf{Algorithm}}{\textbf{Algorithms}}
+\crefname{equation}{\textbf{equation}}{\textbf{equations}}
+\Crefname{equation}{\textbf{Equation}}{\textbf{Equations}}
+\crefname{figure}{\textbf{Figure}}{\textbf{Figures}}
+\Crefname{figure}{\textbf{Figure}}{\textbf{Figures}}
+\crefname{table}{\textbf{Table}}{\textbf{Tables}}
+\Crefname{table}{\textbf{Table}}{\textbf{Tables}}
+\crefname{appendix}{\textbf{Appendix}}{\textbf{Appendices}}
+\Crefname{appendix}{\textbf{Appendix}}{\textbf{Appendices}}
+\crefname{section}{\textbf{\S}}{\textbf{\S}}
+\Crefname{section}{\textbf{\S}}{\textbf{\S}}
+\crefname{algorithm}{\textbf{Algorithm}}{\textbf{Algorithms}}
+\Crefname{algorithm}{\textbf{Algorithm}}{\textbf{Algorithms}}
 
 \hypersetup{
 	colorlinks	= true,			% Colours links instead of ugly boxes
-	urlcolor	= NavyBlue,		% Colour for external hyperlinks
-	linkcolor	= Magenta,		% Colour of internal links
-	citecolor	= Aquamarine	% Colour of citations
+	urlcolor	= blue,			% Colour for external hyperlinks
+	linkcolor	= magenta,		% Colour of internal links
+	citecolor	= teal			% Colour of citations
 }
 
 \AtBeginEnvironment{appendices}{\crefalias{section}{appendix}}
@@ -256,10 +257,10 @@
 \RequirePackage[
 	backend=biber,
 	language=british,
-	backref=true,
+    backref=true,
 	style=verbose-ieee,
-	bibstyle=numeric-comp,
-	citestyle=numeric-comp,
+    bibstyle=numeric,
+    citestyle=numeric,
 ]{biblatex}
 
 \DefineBibliographyStrings{english}{%
@@ -323,7 +324,6 @@
 	\end{tikzpicture}
 }
 
-
 % PROVIDE RELEVANT COMMANDS
 \newrobustcmd*{\@module}{}
 \newrobustcmd*{\@matricno}{}
@@ -335,10 +335,9 @@
 	\renewrobustcmd{\@maketitle}[1]{
 		\newpage
 		\null
-		\vspace{-1cm}
 		\begin{center}
 			\let \footnote \thanks
-			{\LARGE \@module \par \@title \par}
+			{\LARGE \@module \\ \@title \par}
 			\vskip 1.5em
 				{\large
 					\lineskip .5em
@@ -364,7 +363,7 @@
 				\null\vfil
 				\vskip 60\p@
 				\begin{center}%
-					{\Huge \@module \par \@title \par}%
+					{\Huge \@module \\ \@title \par}%
 					\vskip 3em%
 						{\Large
 							\lineskip .75em%
@@ -394,10 +393,9 @@
 		\renewrobustcmd{\@maketitle}[1]{
 			\newpage
 			\null
-			\vspace{-1cm}
 			\begin{center}
 				\let \footnote \thanks
-				{\LARGE \@module \par \@title \par}
+				{\LARGE \@module \\ \@title \par}
 				\vskip 1.5em
 					{\Large
 						\lineskip .5em
