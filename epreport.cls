@@ -188,6 +188,31 @@
 	\end{tikzpicture}
 }
 
+%%%%% ANGLE SHORTHAND FROM https://tex.stackexchange.com/a/55555/174314 %%%%%
+\newcommand\markangle[6][red]{% [color] {X} {origin} {Y} {mark} {radius}
+	% filled circle: red by default
+	\begin{scope}
+		\path[clip] (#2) -- (#3) -- (#4);
+		\fill[color=#1,fill opacity=0.5,draw=#1,name path=circle]
+		(#3) circle (#6mm);
+	\end{scope}
+	% middle calculation
+	\path[name path=line one] (#3) -- (#2);
+	\path[name path=line two] (#3) -- (#4);
+	\path[%
+		name intersections={of=line one and circle, by={inter one}},
+		name intersections={of=line two and circle, by={inter two}}
+	] (inter one) -- (inter two) coordinate[pos=.5] (middle);
+	% bissectrice definition
+	\path[%
+		name path=bissectrice
+	] (#3) -- (barycentric cs:#3=-1,middle=1.2);
+	% put mark
+	\path[
+		name intersections={of=bissectrice and circle, by={middleArc}}
+	] (#3) -- (middleArc) node[pos=1.3] {#5};
+}
+
 %%%%% REFERENCES AND LINKS %%%%%
 \RequirePackage{hyperref}
 \RequirePackage[noabbrev,capitalize]{cleveref}
@@ -257,10 +282,10 @@
 \RequirePackage[
 	backend=biber,
 	language=british,
-    backref=true,
+	backref=true,
 	style=verbose-ieee,
-    bibstyle=numeric,
-    citestyle=numeric,
+	bibstyle=numeric,
+	citestyle=numeric,
 ]{biblatex}
 
 \DefineBibliographyStrings{english}{%
@@ -323,6 +348,8 @@
 		\IfBooleanTF#1{\fill[radius=.6*\radius] circle;}{}
 	\end{tikzpicture}
 }
+
+
 
 %%%%%% PROVIDE RELEVANT COMMANDS %%%%%
 \newrobustcmd*{\@module}{}
