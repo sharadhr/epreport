@@ -324,13 +324,13 @@
 	\end{tikzpicture}
 }
 
-% PROVIDE RELEVANT COMMANDS
+%%%%%% PROVIDE RELEVANT COMMANDS %%%%%
 \newrobustcmd*{\@module}{}
 \newrobustcmd*{\@matricno}{}
 \providerobustcmd*{\module}[1]{\renewcommand\@module{\textbf{#1}}}
 \providerobustcmd*{\matricno}[1]{\renewcommand\@matricno{\textbf{#1}}}
 
-% REDUCE SPACE ABOVE TITLE
+%%%%% CUSTOM TITLE %%%%%
 \ifbool{isarticle}{
 	\renewrobustcmd{\@maketitle}[1]{
 		\newpage
