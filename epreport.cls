@@ -70,7 +70,6 @@
 	\ifpdftex
 		\RequirePackage[
 			onlytext,
-			minionint,
 			lf,
 			swash,
 			opticals,
