@@ -1,4 +1,4 @@
-% epreport.cls is based on the report class, and simplifies typesetting experimental physics reports.
+% epreport.cls simplifies typesetting experimental physics reports, and assignments.
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{epreport}[21/01/16 NUS Experimental Physics report document class]
@@ -22,19 +22,21 @@
 \DeclareOption{lmodern}{\booltrue{islmodern}}
 \DeclareOption{minionpro}{\booltrue{ismpro}\boolfalse{islmodern}}
 
-%%%%% ARTICLE OR REPORT %%%%%
+%%%%% ARTICLE, REPORT, OR EXAM %%%%%
 \newbool{isarticle}
 \newbool{isreport}
+\newbool{isexam}
 \setbool{isarticle}{true}
 \DeclareOption{article}{\booltrue{isarticle}}
 \DeclareOption{report}{\booltrue{isreport}\boolfalse{isarticle}}
+\DeclareOption{exam}{\booltrue{isexam}\boolfalse{isarticle}}
 
 %%%%% OTHER OPTIONS TO BE FORWARDED %%%%%
 \DeclareOption*{
 	\PassOptionsToClass{\CurrentOption}{
-		\ifbool{isarticle}{article}{
-			\ifbool{isreport}{report}{}
-		}
+		\ifbool{isarticle}{article}{}
+		\ifbool{isreport}{report}{}
+		\ifboolexpe{isexam}{exam}{}
 	}
 }
 
@@ -44,6 +46,7 @@
 %%%%% LOAD THE APPROPRIATE CLASS AS A BASE %%%%%
 \ifbool{isarticle}{\LoadClass{article}}{}
 \ifbool{isreport}{\LoadClass{report}}{}
+\ifbool{isexam}{\LoadClass{exam}}{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -64,14 +67,17 @@
 	%%%%% Define tabular-lining as nothing
 	\providerobustcmd{\tablining}{\relax}
 	\RequirePackage{esint}
+	\RequirePackage[verbose=silent]{microtype}
 }{}
 
 \ifbool{ismpro}{
 	\ifpdftex
+		\PassOptionsToPackage{verbose=silent}{microtype}
 		\RequirePackage[
 			onlytext,
 			lf,
 			swash,
+			loosequotes,
 			opticals,
 			footnotefigures
 		]{MinionPro}
@@ -96,7 +102,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%% FONTS & SYMBOLS %%%%%
-\RequirePackage[verbose=silent]{microtype}
 \RequirePackage[nointegrals]{wasysym}
 % Silence font shape warning from wasysym
 \WarningFilter{latexfont}{Font shape}
@@ -145,7 +150,7 @@
 \RequirePackage{pgfplots}
 \RequirePackage{pdfpages}
 \RequirePackage[
-	justification=centering,
+	width=0.6\textwidth,
 	labelfont={small,bf},
 	font={small}]{caption}
 \RequirePackage{subcaption}
@@ -246,9 +251,9 @@
 
 \crefdefaultlabelformat{#2\textbf{#1}#3}
 
-% \creflabelformat{equation}{#2\textbf{(#1)}#3}
-% \creflabelformat{figure}{#2\textbf{#1}#3}
-% \creflabelformat{table}{#2\textbf{#1}#3}
+\creflabelformat{equation}{#2\textbf{(#1)}#3}
+\creflabelformat{figure}{#2\textbf{#1}#3}
+\creflabelformat{table}{#2\textbf{#1}#3}
 
 \crefname{equation}{\textbf{equation}}{\textbf{equations}}
 \Crefname{equation}{\textbf{Equation}}{\textbf{Equations}}
@@ -306,6 +311,103 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
+% EXAM CLASS SETUP %%%%%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ifbool{isexam}{
+	%%%%% QUESTION/CHOICE LABELS %%%%%
+	\renewrobustcmd{\questionlabel}{\thequestion.\hfill}
+	\renewrobustcmd{\subpartlabel}{(\thesubpart)}
+	\renewrobustcmd{\choicelabel}{\circled{\thechoice}}
+
+	%%%%% POINTS FORMATTING %%%%%
+	\renewrobustcmd{\questionshook}{
+		\setlength{\rightpointsmargin}{1.75cm}
+		\setlength{\itemsep}{30pt}
+	}
+
+	%%%%% QUESTION/PART/SUBPART INDENTATION %%%%%
+	\renewrobustcmd{\partshook}{
+		\renewrobustcmd\makelabel[1]{\rlap{##1}\hss}
+		% \setlength{\itemsep}{6pt}
+	}
+
+	\renewrobustcmd{\subpartshook}{
+		\renewrobustcmd\makelabel[1]{\rlap{##1}\hss}
+		% \setlength{\itemsep}{6pt}
+	}
+
+	\renewrobustcmd{\subsubpartshook}{
+		\renewrobustcmd\makelabel[1]{\rlap{##1}\hss}
+		% \setlength{\itemsep}{6pt}
+	}
+
+
+	\renewrobustcmd{\choiceshook}{
+		\setlength{\labelsep}{10pt}
+		\settowidth{\leftmargin}{\circled{W}.\hspace{5pt}\hspace{0em}}
+		\setlength{\itemsep}{8pt}
+	}
+
+	\renewrobustcmd{\solutiontitle}{
+		\noindent\textbf{Solution:}\par\noindent
+	}
+
+	%%%%% MCQ STATEMENTS LIST AND COMMANDS %%%%%
+	\newlist{statements}{enumerate}{1}
+	\setlist[statements]{align=left,leftmargin=*,parsep=8pt,label=\textbf{\Roman{*}}.}
+
+
+	%%%%% MCQ STATEMENTS AND CHOICES ON ONE PAGE %%%%%
+	\BeforeBeginEnvironment{choices}{\par\nopagebreak\minipage{\linewidth}}
+	\AfterEndEnvironment{choices}{\endminipage}
+	\BeforeBeginEnvironment{statements}{\par\nopagebreak\minipage{\linewidth}}
+	\AfterEndEnvironment{statements}{\endminipage\vspace*{6pt}}
+
+
+	%%%%% ONEPAR CHOICES SPREAD %%%%%
+	\patchcmd{\oneparchoices}{\penalty -50\hskip 1em plus 1em\relax}{\hfill}{}{}
+	\patchcmd{\oneparchoices}{\penalty -50\hskip 1em plus 1em\relax}{\hfill}{}{}
+
+	%%%%% SOLUTION ENVIRONMENT %%%%%
+	\SolutionEmphasis{\color{NavyBlue}}
+	\correctchoiceemphasis{\color{NavyBlue}\bfseries\boldmath}
+	\marksnotpoints{}
+	\pointsinrightmargin{}
+	\pointsdroppedatright{}
+	\pointformat{\bfseries\textbf[\themarginpoints]}
+
+	%%%%% REDEFINE COVER PAGINATION AS ARABIC %%%%%
+	\renewenvironment{coverpages}{
+		\ifnum \value{numquestions}>0\relax
+			\ClassError{exam}{
+				Coverpages cannot be used after questions have begun.\MessageBreak
+			}{
+				All question, part, subpart, and subsubpart environments
+				\MessageBreak
+				must begin after the cover pages are complete.\MessageBreak
+			}
+		\fi
+		\@coverpagestrue
+		\adj@hdht@ftht
+		\thispagestyle{headandfoot}
+	}{
+		\clearpage
+		\@coverpagesfalse
+		\adj@hdht@ftht
+	}
+
+	\creflabelformat{question}{#2\textbf{#1}#3}
+	\creflabelformat{partno}{(#2\textbf{#1}#3)}
+	\creflabelformat{subpart}{(#2\textbf{#1}#3)}
+
+	\crefname{question}{question}{questions}
+	\Crefname{question}{Question}{Questions}
+}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
 %%%%% MISCELLANEOUS %%%%%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -348,8 +450,6 @@
 	\end{tikzpicture}
 }
 
-
-
 %%%%%% PROVIDE RELEVANT COMMANDS %%%%%
 \newrobustcmd*{\@module}{}
 \newrobustcmd*{\@matricno}{}
@@ -358,6 +458,28 @@
 
 %%%%% CUSTOM TITLE %%%%%
 \ifbool{isarticle}{
+	\renewrobustcmd{\@maketitle}[1]{
+		\newpage
+		\null
+		\begin{center}
+			\let \footnote \thanks
+			{\LARGE \@module \\ \@title \par}
+			\vskip 1.5em
+				{\large
+					\lineskip .5em
+					\begin{tabular}[t]{c}
+						\@author \\
+						\@matricno
+					\end{tabular}\par}
+			\vskip 1em
+				{\large \@date}
+		\end{center}
+		\par
+		\vskip 1.5em
+	}
+}{}
+
+\ifbool{isexam}{
 	\renewrobustcmd{\@maketitle}[1]{
 		\newpage
 		\null
