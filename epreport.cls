@@ -290,6 +290,7 @@
 	style=verbose-ieee,
 	bibstyle=numeric,
 	citestyle=numeric,
+	sorting=none,
 ]{biblatex}
 
 \DefineBibliographyStrings{english}{%
