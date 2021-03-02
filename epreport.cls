@@ -27,9 +27,15 @@
 \newbool{isreport}
 \newbool{isexam}
 \setbool{isarticle}{true}
-\DeclareOption{article}{\booltrue{isarticle}}
+\DeclareOption{article}{\booltrue{isarticle}\boolfalse{isreport}\boolfalse{isexam}}
 \DeclareOption{report}{\booltrue{isreport}\boolfalse{isarticle}}
 \DeclareOption{exam}{\booltrue{isexam}\boolfalse{isarticle}}
+
+%%%%% OTHER OPTIONS %%%%%
+\newtoggle{hasnographics}
+\newtoggle{hasnodate}
+\DeclareOption{nographics}{\toggletrue{hasnographics}}
+\DeclareOption{nodate}{\toggletrue{hasnodate}}
 
 %%%%% OTHER OPTIONS TO BE FORWARDED %%%%%
 \DeclareOption*{
@@ -143,79 +149,96 @@
 }
 
 %%%%% GRAPHICS, CAPTIONS, TABLES %%%%%
-\RequirePackage[table,dvipsnames]{xcolor}
-\RequirePackage{graphicx}
-\RequirePackage{float}
-\RequirePackage{tikz,tikz-3dplot}
-\RequirePackage{pgfplots}
-\RequirePackage{pdfpages}
-\RequirePackage[
-	width=0.6\textwidth,
-	labelfont={small,bf},
-	font={small}]{caption}
-\RequirePackage{subcaption}
-\RequirePackage{array}
-\RequirePackage{tabularx}
-\RequirePackage{booktabs}
-\RequirePackage[outline]{contour}
-\RequirePackage[skins,theorems]{tcolorbox}
-% TIKZ LIBRARIES
-\usetikzlibrary{
-	calc,
-	arrows,
-	arrows.meta,
-	positioning,
-	decorations.pathreplacing,
-	decorations.markings,
-	decorations.text,
-	calligraphy,
-	pgfplots.dateplot
-}
-\pgfplotsset{compat=newest}
-\contourlength{1pt}
-% TCOLORBOX SETUP
-\tcbset{
-	shield externalize,
-	highlight math style={
-		enhanced,
-		colframe=red,
-		colback=white,
-		arc=0pt,
-		boxrule=1pt
+\nottoggle{hasnographics}{
+	\RequirePackage[table,dvipsnames]{xcolor}
+	\RequirePackage{graphicx}
+	\RequirePackage{float}
+	\RequirePackage{tikz,tikz-3dplot}
+	\RequirePackage{pgfplots}
+	\RequirePackage{pdfpages}
+	\RequirePackage[
+		width=0.6\textwidth,
+		labelfont={small,bf},
+		font={small}]{caption}
+	\RequirePackage{subcaption}
+	\RequirePackage{array}
+	\RequirePackage{tabularx}
+	\RequirePackage{booktabs}
+	\RequirePackage[outline]{contour}
+	\RequirePackage[skins,theorems]{tcolorbox}
+	% TIKZ LIBRARIES
+	\usetikzlibrary{
+		calc,
+		arrows,
+		arrows.meta,
+		positioning,
+		decorations.pathreplacing,
+		decorations.markings,
+		decorations.text,
+		calligraphy,
+		pgfplots.dateplot
 	}
-}
+	\pgfplotsset{compat=newest}
+	\contourlength{1pt}
+	% TCOLORBOX SETUP
+	\tcbset{
+		shield externalize,
+		highlight math style={
+			enhanced,
+			colframe=red,
+			colback=white,
+			arc=0pt,
+			boxrule=1pt
+		}
+	}
 
-%%%%% TIKZ CIRCLES %%%%%
-\providerobustcmd*\circled[1]{
-	\begin{tikzpicture}[baseline=(char.base)]
-		\node[shape=circle, draw, minimum size=1.5em, inner sep=0pt] (char) {#1};
-	\end{tikzpicture}
-}
+	%%%%% TIKZ CIRCLES %%%%%
+	\providerobustcmd*\circled[1]{
+		\begin{tikzpicture}[baseline=(char.base)]
+			\node[shape=circle, draw, minimum size=1.5em, inner sep=0pt] (char) {#1};
+		\end{tikzpicture}
+	}
 
-%%%%% ANGLE SHORTHAND FROM https://tex.stackexchange.com/a/55555/174314 %%%%%
-\newcommand\markangle[6][red]{% [color] {X} {origin} {Y} {mark} {radius}
-	% filled circle: red by default
-	\begin{scope}
-		\path[clip] (#2) -- (#3) -- (#4);
-		\fill[color=#1,fill opacity=0.5,draw=#1,name path=circle]
-		(#3) circle (#6mm);
-	\end{scope}
-	% middle calculation
-	\path[name path=line one] (#3) -- (#2);
-	\path[name path=line two] (#3) -- (#4);
-	\path[%
-		name intersections={of=line one and circle, by={inter one}},
-		name intersections={of=line two and circle, by={inter two}}
-	] (inter one) -- (inter two) coordinate[pos=.5] (middle);
-	% bissectrice definition
-	\path[%
-		name path=bissectrice
-	] (#3) -- (barycentric cs:#3=-1,middle=1.2);
-	% put mark
-	\path[
-		name intersections={of=bissectrice and circle, by={middleArc}}
-	] (#3) -- (middleArc) node[pos=1.3] {#5};
-}
+	%%%%% ANGLE SHORTHAND FROM https://tex.stackexchange.com/a/55555/174314 %%%%%
+	\newcommand\markangle[6][red]{% [color] {X} {origin} {Y} {mark} {radius}
+		% filled circle: red by default
+		\begin{scope}
+			\path[clip] (#2) -- (#3) -- (#4);
+			\fill[color=#1,fill opacity=0.5,draw=#1,name path=circle]
+			(#3) circle (#6mm);
+		\end{scope}
+		% middle calculation
+		\path[name path=line one] (#3) -- (#2);
+		\path[name path=line two] (#3) -- (#4);
+		\path[%
+			name intersections={of=line one and circle, by={inter one}},
+			name intersections={of=line two and circle, by={inter two}}
+		] (inter one) -- (inter two) coordinate[pos=.5] (middle);
+		% bissectrice definition
+		\path[%
+			name path=bissectrice
+		] (#3) -- (barycentric cs:#3=-1,middle=1.2);
+		% put mark
+		\path[
+			name intersections={of=bissectrice and circle, by={middleArc}}
+		] (#3) -- (middleArc) node[pos=1.3] {#5};
+	}
+
+	%%%%% DEFAULT CENTRED FLOATS %%%%%
+	\g@addto@macro\@floatboxreset{\centering}
+	\g@addto@macro\@subfloatboxreset{\centering}
+
+	%%%%% RADIO BUTTONS %%%%%
+	\NewDocumentCommand\radiobutton{s}{
+		\begin{tikzpicture}
+			\pgfmathsetlengthmacro\radius{height("X")/2}
+			\draw[radius=\radius] circle;
+			\IfBooleanTF#1{\fill[radius=.6*\radius] circle;}{}
+		\end{tikzpicture}
+	}
+
+	\renewrobustcmd{\tabularxcolumn}[1]{m{#1}}
+}{}
 
 %%%%% REFERENCES AND LINKS %%%%%
 \RequirePackage{hyperref}
@@ -241,6 +264,7 @@
 \DeclareSIUnit{\solarmass}{\textit{M}_{\astrosun}}
 \DeclareSIUnit{\atm}{atm}
 
+\providerobustcmd{\im}{\mathrm{i}}
 \providerobustcmd{\tomb}{\quad\blacksquare{}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -423,8 +447,6 @@
 	\sisetup{text-rm={\tablining}}
 }
 
-\renewrobustcmd{\tabularxcolumn}[1]{m{#1}}
-
 \setlength{\jot}{8pt}
 
 %%%%% COPY-PASTABLE PDF %%%%%
@@ -437,19 +459,6 @@
 \emergencystretch=0pt
 \righthyphenmin=4
 \lefthyphenmin=4
-
-%%%%% DEFAULT CENTRED FLOATS %%%%%
-\g@addto@macro\@floatboxreset{\centering}
-\g@addto@macro\@subfloatboxreset{\centering}
-
-%%%%% RADIO BUTTONS %%%%%
-\NewDocumentCommand\radiobutton{s}{
-	\begin{tikzpicture}
-		\pgfmathsetlengthmacro\radius{height("X")/2}
-		\draw[radius=\radius] circle;
-		\IfBooleanTF#1{\fill[radius=.6*\radius] circle;}{}
-	\end{tikzpicture}
-}
 
 %%%%%% PROVIDE RELEVANT COMMANDS %%%%%
 \newrobustcmd*{\@module}{}
@@ -468,12 +477,13 @@
 			\vskip 1.5em
 				{\large
 					\lineskip .5em
-					\begin{tabular}[t]{c}
-						\@author \\
-						\@matricno
-					\end{tabular}\par}
-			\vskip 1em
-				{\large \@date}
+					\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+						\par}{
+						\begin{tabular}[t]{c}
+							\@author \\
+							\@matricno
+						\end{tabular}\par}}
+			\nottoggle{hasnodate}{\vskip 1em{\Large \@date}}{}
 		\end{center}
 		\par
 		\vskip 1.5em
@@ -490,12 +500,13 @@
 			\vskip 1.5em
 				{\large
 					\lineskip .5em
-					\begin{tabular}[t]{c}
-						\@author \\
-						\@matricno
-					\end{tabular}\par}
-			\vskip 1em
-				{\large \@date}
+					\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+						\par}{
+						\begin{tabular}[t]{c}
+							\@author \\
+							\@matricno
+						\end{tabular}\par}}
+			\nottoggle{hasnodate}{\vskip 1em {\Large \@date}}{}
 		\end{center}
 		\par
 		\vskip 1.5em
@@ -516,12 +527,16 @@
 					\vskip 3em%
 						{\Large
 							\lineskip .75em%
-							\begin{tabular}[t]{c}%
-								\@author \\
-								\@matricno
-							\end{tabular}\par}%
-					\vskip 1.5em%
-						{\Large \@date \par}%       % Set date in \large size.
+							\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+								\par}{
+								\begin{tabular}[t]{c}
+									\@author \\
+									\@matricno
+								\end{tabular}\par}}%
+					\nottoggle{hasnodate}{
+						\vskip 1.5em%
+						{\Large \@date \par}
+					}{}
 				\end{center}\par
 				\@thanks
 				\vfil\null
