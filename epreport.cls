@@ -266,7 +266,7 @@
 \DeclareSIUnit{\solarmass}{\textit{M}_{\astrosun}}
 \DeclareSIUnit{\atm}{atm}
 
-\providerobustcmd{\im}{\mathrm{i}}
+\providerobustcmd{\im}{\mathrm{i}\mkern1mu}
 \providerobustcmd{\tomb}{\quad\blacksquare{}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
