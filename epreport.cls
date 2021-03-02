@@ -176,8 +176,10 @@
 		decorations.markings,
 		decorations.text,
 		calligraphy,
-		pgfplots.dateplot
+		pgfplots.dateplot,
+		external,
 	}
+	\tikzexternalize[prefix=figures/]
 	\pgfplotsset{compat=newest}
 	\contourlength{1pt}
 	% TCOLORBOX SETUP
