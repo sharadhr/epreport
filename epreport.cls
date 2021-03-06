@@ -6,9 +6,6 @@
 %%%%% MISCELLANEOUS BUT PRIMARY IMPORTS %%%%%
 \RequirePackage{iftex,etoolbox,expl3,xparse,silence}
 
-%%%%% FONTS & SYMBOLS %%%%%
-\RequirePackage[utf8]{inputenc}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % CLASS OPTIONS DECLARATION AND PROCESSING %%%%%
@@ -16,20 +13,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%% FONTS %%%%%
-\newbool{islmodern}
-\newbool{ismpro}
-\setbool{islmodern}{true}
-\DeclareOption{lmodern}{\booltrue{islmodern}}
-\DeclareOption{minionpro}{\booltrue{ismpro}\boolfalse{islmodern}}
+\newtoggle{islmodern}
+\newtoggle{ismpro}
+\toggletrue{islmodern}
+\DeclareOption{lmodern}{}
+\DeclareOption{minionpro}{\toggletrue{ismpro}\togglefalse{islmodern}}
 
 %%%%% ARTICLE, REPORT, OR EXAM %%%%%
-\newbool{isarticle}
-\newbool{isreport}
-\newbool{isexam}
-\setbool{isarticle}{true}
-\DeclareOption{article}{\booltrue{isarticle}\boolfalse{isreport}\boolfalse{isexam}}
-\DeclareOption{report}{\booltrue{isreport}\boolfalse{isarticle}}
-\DeclareOption{exam}{\booltrue{isexam}\boolfalse{isarticle}}
+\newtoggle{isarticle}
+\newtoggle{isreport}
+\newtoggle{isexam}
+\toggletrue{isarticle}
+\DeclareOption{article}{\toggletrue{isarticle}}
+\DeclareOption{report}{\togglefalse{isarticle}\toggletrue{isreport}}
+\DeclareOption{exam}{\togglefalse{isarticle}\toggletrue{isexam}}
 
 %%%%% OTHER OPTIONS %%%%%
 \newtoggle{hasnographics}
@@ -50,9 +47,9 @@
 \ProcessOptions\relax
 
 %%%%% LOAD THE APPROPRIATE CLASS AS A BASE %%%%%
-\ifbool{isarticle}{\LoadClass{article}}{}
-\ifbool{isreport}{\LoadClass{report}}{}
-\ifbool{isexam}{\LoadClass{exam}}{}
+\iftoggle{isarticle}{\LoadClass{article}}{}
+\iftoggle{isreport}{\LoadClass{report}}{}
+\iftoggle{isexam}{\LoadClass{exam}}{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -66,7 +63,9 @@
 % FONT LOADING %%%%%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\ifbool{islmodern}{
+\iftoggle{islmodern}{
+	\RequirePDFTeX
+	\RequirePackage[utf8]{inputenc}
 	\RequirePackage{lmodern}
 	\RequirePackage{amsmath, amsfonts, amssymb}
 	\pdfmapfile{=mlm-substitute.map}
@@ -76,8 +75,9 @@
 	\RequirePackage[verbose=silent]{microtype}
 }{}
 
-\ifbool{ismpro}{
-	\ifpdftex
+\iftoggle{ismpro}{
+	\ifbool{pdftex}{
+		\RequirePackage[utf8]{inputenc}
 		\PassOptionsToPackage{verbose=silent}{microtype}
 		\RequirePackage[
 			onlytext,
@@ -88,7 +88,7 @@
 			footnotefigures
 		]{MinionPro}
 		\RequirePackage[withamsmath]{minionmath}
-		\RequirePackage{amsmath}
+		\RequirePackage{amsmath,amsfonts,amssymb}
 		\RequirePackage{minionamsmath}
 		%%%%% Define tabular-lining figures
 		\providerobustcmd{\tablining}{\figureversion{tab,lf}}
@@ -98,7 +98,61 @@
 		\SetMathAlphabet\mathcal{bold}{T1}{\Mn@Math@Family}{eb}{sw}
 		% Silence \arc redefined warning from pict2e
 		\WarningFilter*{pict2e}{\protect\arc\space redefined}
-	\fi
+	}{}
+	\ifboolexpr{bool{xetex} or bool{luatex}}{
+		\RequirePackage{fontspec}
+		\RequirePackage[math-style=ISO,bold-style=ISO]{unicode-math}
+		\setmathfont[
+			Script = Math,
+			SizeFeatures = {
+				{Size=-6,Font=MinionMath-Tiny,Style=MathScriptScript},
+				{Size=6-8.4,Font=MinionMath-Capt,Style=MathScript},
+				{Size=8.4-,Font=MinionMath-Regular},
+			},
+		]{MinionMath-Regular}
+		\setmathfont[range=cal,Contextuals=Swash]{MinionPro-It}
+		\setmathfont[range=frak]{Latin Modern Math}
+		\setmainfont[
+			UprightFeatures={
+				SizeFeatures={
+					{Size={-8.4},Font=MinionPro-Capt},
+					{Size={8.4-13},Font=MinionPro-Regular},
+					{Size={13-19.9},Font=MinionPro-Subh},
+					{Size={19.9-},Font=MinionPro-Disp}
+				},
+				{RawFeature = {protrusion = mnr}},
+			},
+			BoldFeatures={
+				SizeFeatures={
+					{Size={-8.4},Font=MinionPro-BoldCapt},
+					{Size={8.4-13},Font=MinionPro-Bold},
+					{Size={13-19.9},Font=MinionPro-BoldSubh},
+					{Size={19.9-},Font=MinionPro-BoldDisp}
+				},
+				{RawFeature = {protrusion=mnrb}},
+			},
+			ItalicFeatures={
+				SizeFeatures={
+					{Size={-8.4},Font=MinionPro-ItCapt},
+					{Size={8.4-13},Font=MinionPro-It},
+					{Size={13-19.9},Font=MinionPro-ItSubh},
+					{Size={19.9-},Font=MinionPro-ItDisp}
+				},
+				{RawFeature = {protrusion=mni}},
+			},
+			BoldItalicFeatures={
+				SizeFeatures={
+					{Size={-8.4},Font=MinionPro-BoldItCapt},
+					{Size={8.4-13},Font=MinionPro-BoldIt},
+					{Size={13-19.9},Font=MinionPro-BoldItSubh},
+					{Size={19.9-},Font=MinionPro-BoldItDisp}
+				},
+				{RawFeature = {protrusion=mnib}}
+			},
+			RawFeature= {expansion=default},
+		]{Minion Pro}
+		% TODO: More detailed Xe/LuaTeX code
+	}{}
 }{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -266,7 +320,13 @@
 \DeclareSIUnit{\solarmass}{\textit{M}_{\astrosun}}
 \DeclareSIUnit{\atm}{atm}
 
-\providerobustcmd{\im}{\mathrm{i}\mkern1mu}
+\providerobustcmd{\im}{\mkern0.5mu\mathrm{i}\mkern0.5mu}
+\providerobustcmd{\e}{\mkern0.5mu\mathrm{e}\mkern0.5mu}
+\providerobustcmd{\reals}{\mathbb{R}}
+\providerobustcmd{\naturals}{\mathbb{N}}
+\providerobustcmd{\integers}{\mathbb{Z}}
+\providerobustcmd{\rationals}{\mathbb{Q}}
+\providerobustcmd{\complexes}{\mathbb{C}}
 \providerobustcmd{\tomb}{\quad\blacksquare{}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -342,7 +402,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\ifbool{isexam}{
+\iftoggle{isexam}{
 	%%%%% QUESTION/CHOICE LABELS %%%%%
 	\renewrobustcmd{\questionlabel}{\thequestion.\hfill}
 	\renewrobustcmd{\subpartlabel}{(\thesubpart)}
@@ -452,8 +512,10 @@
 \setlength{\jot}{8pt}
 
 %%%%% COPY-PASTABLE PDF %%%%%
-\input{glyphtounicode}
-\pdfgentounicode=1
+\ifbool{pdftex}{
+	\input{glyphtounicode}
+	\pdfgentounicode=1
+}{}
 
 %%%%% MICROTYPE SETUP FOR HYPHENATION %%%%%
 \pretolerance=2500
@@ -469,7 +531,7 @@
 \providerobustcmd*{\matricno}[1]{\renewcommand\@matricno{\textbf{#1}}}
 
 %%%%% CUSTOM TITLE %%%%%
-\ifbool{isarticle}{
+\iftoggle{isarticle}{
 	\renewrobustcmd{\@maketitle}[1]{
 		\newpage
 		\null
@@ -477,14 +539,14 @@
 			\let \footnote \thanks
 			{\LARGE \@module \\ \@title \par}
 			\vskip 1.5em
-				{\large
-					\lineskip .5em
-					\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
-						\par}{
-						\begin{tabular}[t]{c}
-							\@author \\
-							\@matricno
-						\end{tabular}\par}}
+			{\large
+				\lineskip .5em
+				\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+					\par}{
+					\begin{tabular}[t]{c}
+						\@author \\
+						\@matricno
+					\end{tabular}\par}}
 			\nottoggle{hasnodate}{\vskip 1em{\Large \@date}}{}
 		\end{center}
 		\par
@@ -492,7 +554,7 @@
 	}
 }{}
 
-\ifbool{isexam}{
+\iftoggle{isexam}{
 	\renewrobustcmd{\@maketitle}[1]{
 		\newpage
 		\null
@@ -500,14 +562,14 @@
 			\let \footnote \thanks
 			{\LARGE \@module \\ \@title \par}
 			\vskip 1.5em
-				{\large
-					\lineskip .5em
-					\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
-						\par}{
-						\begin{tabular}[t]{c}
-							\@author \\
-							\@matricno
-						\end{tabular}\par}}
+			{\large
+				\lineskip .5em
+				\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+					\par}{
+					\begin{tabular}[t]{c}
+						\@author \\
+						\@matricno
+					\end{tabular}\par}}
 			\nottoggle{hasnodate}{\vskip 1em {\Large \@date}}{}
 		\end{center}
 		\par
@@ -515,7 +577,7 @@
 	}
 }{}
 
-\ifbool{isreport}{
+\iftoggle{isreport}{
 	\ifbool{@titlepage}{
 		\renewcommand\maketitle{
 			\begin{titlepage}%
@@ -527,14 +589,14 @@
 				\begin{center}%
 					{\Huge \@module \\ \@title \par}%
 					\vskip 3em%
-						{\Large
-							\lineskip .75em%
-							\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
-								\par}{
-								\begin{tabular}[t]{c}
-									\@author \\
-									\@matricno
-								\end{tabular}\par}}%
+					{\Large
+						\lineskip .75em%
+						\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+							\par}{
+							\begin{tabular}[t]{c}
+								\@author \\
+								\@matricno
+							\end{tabular}\par}}%
 					\nottoggle{hasnodate}{
 						\vskip 1.5em%
 						{\Large \@date \par}
@@ -563,14 +625,14 @@
 				\let \footnote \thanks
 				{\LARGE \@module \\ \@title \par}
 				\vskip 1.5em
-					{\Large
-						\lineskip .5em
-						\begin{tabular}[t]{c}
-							\@author \\
-							\@matricno
-						\end{tabular}\par}
+				{\Large
+					\lineskip .5em
+					\begin{tabular}[t]{c}
+						\@author \\
+						\@matricno
+					\end{tabular}\par}
 				\vskip 1em
-					{\Large \@date}
+				{\Large \@date}
 			\end{center}
 			\par
 			\vskip 1.5em
