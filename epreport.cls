@@ -20,43 +20,23 @@
 \DeclareOption{minionpro}{\toggletrue{ismpro}\togglefalse{islmodern}}
 
 %%%%% ARTICLE, REPORT, OR EXAM %%%%%
-\newtoggle{isarticle}
-\newtoggle{isreport}
-\newtoggle{isexam}
-\toggletrue{isarticle}
-\DeclareOption{article}{\toggletrue{isarticle}}
-\DeclareOption{report}{\togglefalse{isarticle}\toggletrue{isreport}}
-\DeclareOption{exam}{\togglefalse{isarticle}\toggletrue{isexam}}
+\providerobustcmd{\@classtype}{article}
+\DeclareOption{article}{\renewrobustcmd{\@classtype}{article}}
+\DeclareOption{report}{\renewrobustcmd{\@classtype}{report}}
+\DeclareOption{exam}{\renewrobustcmd{\@classtype}{exam}}
 
 %%%%% OTHER OPTIONS %%%%%
-\newtoggle{hasnographics}
+\newtoggle{hasnotikzlibs}
 \newtoggle{hasnodate}
-\DeclareOption{nographics}{\toggletrue{hasnographics}}
+\DeclareOption{notikzlibs}{\toggletrue{hasnotikzlibs}}
 \DeclareOption{nodate}{\toggletrue{hasnodate}}
 
-%%%%% OTHER OPTIONS TO BE FORWARDED %%%%%
-\DeclareOption*{
-	\PassOptionsToClass{\CurrentOption}{
-		\ifbool{isarticle}{article}{}
-		\ifbool{isreport}{report}{}
-		\ifboolexpe{isexam}{exam}{}
-	}
-}
-
 %%%%% PROCESS THE OPTIONS %%%%%
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{\@classtype}}
 \ProcessOptions\relax
 
 %%%%% LOAD THE APPROPRIATE CLASS AS A BASE %%%%%
-\iftoggle{isarticle}{\LoadClass{article}}{}
-\iftoggle{isreport}{\LoadClass{report}}{}
-\iftoggle{isexam}{\LoadClass{exam}}{}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% COMPILER PROCESSING %%%%%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% TODO: Add compiler conditionals for better font processing
+\LoadClass{\@classtype}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -112,42 +92,43 @@
 		]{MinionMath-Regular}
 		\setmathfont[range=cal,Contextuals=Swash]{MinionPro-It}
 		\setmathfont[range=frak]{Latin Modern Math}
+		\setmathfont[range=scr]{Latin Modern Math}
 		\setmainfont[
 			UprightFeatures={
 				SizeFeatures={
 					{Size={-8.4},Font=MinionPro-Capt},
-					{Size={8.4-13},Font=MinionPro-Regular},
-					{Size={13-19.9},Font=MinionPro-Subh},
-					{Size={19.9-},Font=MinionPro-Disp}
-				},
-				{RawFeature = {protrusion = mnr}},
+				{Size={8.4-13},Font=MinionPro-Regular},
+			{Size={13-19.9},Font=MinionPro-Subh},
+			{Size={19.9-},Font=MinionPro-Disp}
+			},
+			{RawFeature = {protrusion = mnr}},
 			},
 			BoldFeatures={
 				SizeFeatures={
 					{Size={-8.4},Font=MinionPro-BoldCapt},
-					{Size={8.4-13},Font=MinionPro-Bold},
-					{Size={13-19.9},Font=MinionPro-BoldSubh},
-					{Size={19.9-},Font=MinionPro-BoldDisp}
-				},
-				{RawFeature = {protrusion=mnrb}},
+				{Size={8.4-13},Font=MinionPro-Bold},
+			{Size={13-19.9},Font=MinionPro-BoldSubh},
+			{Size={19.9-},Font=MinionPro-BoldDisp}
+			},
+			{RawFeature = {protrusion=mnrb}},
 			},
 			ItalicFeatures={
 				SizeFeatures={
 					{Size={-8.4},Font=MinionPro-ItCapt},
-					{Size={8.4-13},Font=MinionPro-It},
-					{Size={13-19.9},Font=MinionPro-ItSubh},
-					{Size={19.9-},Font=MinionPro-ItDisp}
-				},
-				{RawFeature = {protrusion=mni}},
+				{Size={8.4-13},Font=MinionPro-It},
+			{Size={13-19.9},Font=MinionPro-ItSubh},
+			{Size={19.9-},Font=MinionPro-ItDisp}
+			},
+			{RawFeature = {protrusion=mni}},
 			},
 			BoldItalicFeatures={
 				SizeFeatures={
 					{Size={-8.4},Font=MinionPro-BoldItCapt},
-					{Size={8.4-13},Font=MinionPro-BoldIt},
-					{Size={13-19.9},Font=MinionPro-BoldItSubh},
-					{Size={19.9-},Font=MinionPro-BoldItDisp}
-				},
-				{RawFeature = {protrusion=mnib}}
+				{Size={8.4-13},Font=MinionPro-BoldIt},
+			{Size={13-19.9},Font=MinionPro-BoldItSubh},
+			{Size={19.9-},Font=MinionPro-BoldItDisp}
+			},
+			{RawFeature = {protrusion=mnib}}
 			},
 			RawFeature= {expansion=default},
 		]{Minion Pro}
@@ -203,24 +184,24 @@
 }
 
 %%%%% GRAPHICS, CAPTIONS, TABLES %%%%%
-\nottoggle{hasnographics}{
-	\RequirePackage[table,dvipsnames]{xcolor}
-	\RequirePackage{graphicx}
-	\RequirePackage{float}
-	\RequirePackage{tikz,tikz-3dplot}
-	\RequirePackage{pgfplots}
-	\RequirePackage{pdfpages}
-	\RequirePackage[
-		width=0.6\textwidth,
-		labelfont={small,bf},
-		font={small}]{caption}
-	\RequirePackage{subcaption}
-	\RequirePackage{array}
-	\RequirePackage{tabularx}
-	\RequirePackage{booktabs}
-	\RequirePackage[outline]{contour}
-	\RequirePackage[skins,theorems]{tcolorbox}
-	% TIKZ LIBRARIES
+\PassOptionsToPackage{table,dvipsnames}{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{float}
+\RequirePackage{tikz,tikz-3dplot}
+\RequirePackage{pgfplots}
+\RequirePackage{pdfpages}
+\RequirePackage[
+	width=0.6\textwidth,
+	labelfont={small,bf},
+	font={small}]{caption}
+\RequirePackage{subcaption}
+\RequirePackage{array}
+\RequirePackage{tabularx}
+\RequirePackage{booktabs}
+\RequirePackage[outline]{contour}
+\RequirePackage[skins,theorems]{tcolorbox}
+% TIKZ LIBRARIES
+\nottoggle{hasnotikzlibs}{
 	\usetikzlibrary{
 		calc,
 		arrows,
@@ -234,67 +215,67 @@
 		external,
 	}
 	\tikzexternalize[prefix=figures/]
-	\pgfplotsset{compat=newest}
-	\contourlength{1pt}
-	% TCOLORBOX SETUP
-	\tcbset{
-		shield externalize,
-		highlight math style={
-			enhanced,
-			colframe=red,
-			colback=white,
-			arc=0pt,
-			boxrule=1pt
-		}
-	}
-
-	%%%%% TIKZ CIRCLES %%%%%
-	\providerobustcmd*\circled[1]{
-		\begin{tikzpicture}[baseline=(char.base)]
-			\node[shape=circle, draw, minimum size=1.5em, inner sep=0pt] (char) {#1};
-		\end{tikzpicture}
-	}
-
-	%%%%% ANGLE SHORTHAND FROM https://tex.stackexchange.com/a/55555/174314 %%%%%
-	\newcommand\markangle[6][red]{% [color] {X} {origin} {Y} {mark} {radius}
-		% filled circle: red by default
-		\begin{scope}
-			\path[clip] (#2) -- (#3) -- (#4);
-			\fill[color=#1,fill opacity=0.5,draw=#1,name path=circle]
-			(#3) circle (#6mm);
-		\end{scope}
-		% middle calculation
-		\path[name path=line one] (#3) -- (#2);
-		\path[name path=line two] (#3) -- (#4);
-		\path[%
-			name intersections={of=line one and circle, by={inter one}},
-			name intersections={of=line two and circle, by={inter two}}
-		] (inter one) -- (inter two) coordinate[pos=.5] (middle);
-		% bissectrice definition
-		\path[%
-			name path=bissectrice
-		] (#3) -- (barycentric cs:#3=-1,middle=1.2);
-		% put mark
-		\path[
-			name intersections={of=bissectrice and circle, by={middleArc}}
-		] (#3) -- (middleArc) node[pos=1.3] {#5};
-	}
-
-	%%%%% DEFAULT CENTRED FLOATS %%%%%
-	\g@addto@macro\@floatboxreset{\centering}
-	\g@addto@macro\@subfloatboxreset{\centering}
-
-	%%%%% RADIO BUTTONS %%%%%
-	\NewDocumentCommand\radiobutton{s}{
-		\begin{tikzpicture}
-			\pgfmathsetlengthmacro\radius{height("X")/2}
-			\draw[radius=\radius] circle;
-			\IfBooleanTF#1{\fill[radius=.6*\radius] circle;}{}
-		\end{tikzpicture}
-	}
-
-	\renewrobustcmd{\tabularxcolumn}[1]{m{#1}}
 }{}
+\pgfplotsset{compat=newest}
+\contourlength{1pt}
+% TCOLORBOX SETUP
+\tcbset{
+	shield externalize,
+	highlight math style={
+		enhanced,
+		colframe=red,
+		colback=white,
+		arc=0pt,
+		boxrule=1pt
+	}
+}
+
+%%%%% TIKZ CIRCLES %%%%%
+\providerobustcmd*\circled[1]{
+	\begin{tikzpicture}[baseline=(char.base)]
+		\node[shape=circle, draw, minimum size=1.5em, inner sep=0pt] (char) {#1};
+	\end{tikzpicture}
+}
+
+%%%%% ANGLE SHORTHAND FROM https://tex.stackexchange.com/a/55555/174314 %%%%%
+\newcommand\markangle[6][red]{% [color] {X} {origin} {Y} {mark} {radius}
+	% filled circle: red by default
+	\begin{scope}
+		\path[clip] (#2) -- (#3) -- (#4);
+		\fill[color=#1,fill opacity=0.5,draw=#1,name path=circle]
+		(#3) circle (#6mm);
+	\end{scope}
+	% middle calculation
+	\path[name path=line one] (#3) -- (#2);
+	\path[name path=line two] (#3) -- (#4);
+	\path[%
+		name intersections={of=line one and circle, by={inter one}},
+		name intersections={of=line two and circle, by={inter two}}
+	] (inter one) -- (inter two) coordinate[pos=.5] (middle);
+	% bissectrice definition
+	\path[%
+		name path=bissectrice
+	] (#3) -- (barycentric cs:#3=-1,middle=1.2);
+	% put mark
+	\path[
+		name intersections={of=bissectrice and circle, by={middleArc}}
+	] (#3) -- (middleArc) node[pos=1.3] {#5};
+}
+
+%%%%% DEFAULT CENTRED FLOATS %%%%%
+\g@addto@macro\@floatboxreset{\centering}
+\g@addto@macro\@subfloatboxreset{\centering}
+
+%%%%% RADIO BUTTONS %%%%%
+\NewDocumentCommand\radiobutton{s}{
+	\begin{tikzpicture}
+		\pgfmathsetlengthmacro\radius{height("X")/2}
+		\draw[radius=\radius] circle;
+		\IfBooleanTF#1{\fill[radius=.6*\radius] circle;}{}
+	\end{tikzpicture}
+}
+
+\renewrobustcmd{\tabularxcolumn}[1]{m{#1}}
 
 %%%%% REFERENCES AND LINKS %%%%%
 \RequirePackage{hyperref}
@@ -402,7 +383,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\iftoggle{isexam}{
+\ifdefstring{\@classtype}{exam}{
 	%%%%% QUESTION/CHOICE LABELS %%%%%
 	\renewrobustcmd{\questionlabel}{\thequestion.\hfill}
 	\renewrobustcmd{\subpartlabel}{(\thesubpart)}
@@ -458,8 +439,8 @@
 	\patchcmd{\oneparchoices}{\penalty -50\hskip 1em plus 1em\relax}{\hfill}{}{}
 
 	%%%%% SOLUTION ENVIRONMENT %%%%%
-	\SolutionEmphasis{\color{NavyBlue}}
-	\correctchoiceemphasis{\color{NavyBlue}\bfseries\boldmath}
+	\SolutionEmphasis{\color{blue}}
+	\correctchoiceemphasis{\color{blue}\bfseries\boldmath}
 	\marksnotpoints{}
 	\pointsinrightmargin{}
 	\pointsdroppedatright{}
@@ -531,7 +512,7 @@
 \providerobustcmd*{\matricno}[1]{\renewcommand\@matricno{\textbf{#1}}}
 
 %%%%% CUSTOM TITLE %%%%%
-\iftoggle{isarticle}{
+\ifdefstring{\@classtype}{article}{
 	\renewrobustcmd{\@maketitle}[1]{
 		\newpage
 		\null
@@ -554,7 +535,7 @@
 	}
 }{}
 
-\iftoggle{isexam}{
+\ifdefstring{\@classtype}{exam}{
 	\renewrobustcmd{\@maketitle}[1]{
 		\newpage
 		\null
@@ -577,7 +558,7 @@
 	}
 }{}
 
-\iftoggle{isreport}{
+\ifdefstring{\@classtype}{report}{
 	\ifbool{@titlepage}{
 		\renewcommand\maketitle{
 			\begin{titlepage}%
