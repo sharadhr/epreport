@@ -533,7 +533,7 @@
 							\@author \\
 							\@matricno
 						\end{tabular}\par}}
-			\nottoggle{hasnodate}{\vskip 1em{\Large \@date}}{}
+			\iftoggle{hasdate}{\vskip 1em{\Large \@date}}{}
 		\end{center}
 		\par
 		\vskip 1.5em
@@ -556,7 +556,7 @@
 							\@author \\
 							\@matricno
 						\end{tabular}\par}}
-			\nottoggle{hasnodate}{\vskip 1em {\Large \@date}}{}
+			\iftoggle{hasdate}{\vskip 1em {\Large \@date}}{}
 		\end{center}
 		\par
 		\vskip 1.5em
@@ -583,7 +583,7 @@
 									\@author \\
 									\@matricno
 								\end{tabular}\par}}%
-					\nottoggle{hasnodate}{
+					\iftoggle{hasdate}{
 						\vskip 1.5em%
 							{\Large \@date \par}
 					}{}
