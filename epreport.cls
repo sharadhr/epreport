@@ -26,10 +26,13 @@
 \DeclareOption{exam}{\renewrobustcmd{\@classtype}{exam}}
 
 %%%%% OTHER OPTIONS %%%%%
-\newtoggle{hasnotikzlibs}
-\newtoggle{hasnodate}
-\DeclareOption{notikzlibs}{\toggletrue{hasnotikzlibs}}
-\DeclareOption{nodate}{\toggletrue{hasnodate}}
+\newtoggle{hastikzlibs}
+\newtoggle{hasdate}
+\newtoggle{hasbib}
+\DeclareOption{tikzlibs}{\toggletrue{hastikzlibs}}
+\DeclareOption{date}{\toggletrue{hasdate}}
+\DeclareOption{bib}{\toggletrue{hasbib}}
+
 
 %%%%% PROCESS THE OPTIONS %%%%%
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{\@classtype}}
@@ -46,9 +49,9 @@
 \iftoggle{islmodern}{
 	\RequirePDFTeX
 	\RequirePackage[utf8]{inputenc}
-	\RequirePackage{lmodern}
+	\RequirePackage{mlmodern}
 	\RequirePackage{amsmath, amsfonts, amssymb}
-	\pdfmapfile{=mlm-substitute.map}
+	% \pdfmapfile{=mlm-substitute.map}
 	%%%%% Define tabular-lining as nothing
 	\providerobustcmd{\tablining}{\relax}
 	\RequirePackage{esint}
@@ -97,38 +100,38 @@
 			UprightFeatures={
 				SizeFeatures={
 					{Size={-8.4},Font=MinionPro-Capt},
-				{Size={8.4-13},Font=MinionPro-Regular},
-			{Size={13-19.9},Font=MinionPro-Subh},
-			{Size={19.9-},Font=MinionPro-Disp}
-			},
-			{RawFeature = {protrusion = mnr}},
+					{Size={8.4-13},Font=MinionPro-Regular},
+					{Size={13-19.9},Font=MinionPro-Subh},
+					{Size={19.9-},Font=MinionPro-Disp}
+				},
+				{RawFeature = {protrusion = mnr}},
 			},
 			BoldFeatures={
 				SizeFeatures={
 					{Size={-8.4},Font=MinionPro-BoldCapt},
-				{Size={8.4-13},Font=MinionPro-Bold},
-			{Size={13-19.9},Font=MinionPro-BoldSubh},
-			{Size={19.9-},Font=MinionPro-BoldDisp}
-			},
-			{RawFeature = {protrusion=mnrb}},
+					{Size={8.4-13},Font=MinionPro-Bold},
+					{Size={13-19.9},Font=MinionPro-BoldSubh},
+					{Size={19.9-},Font=MinionPro-BoldDisp}
+				},
+				{RawFeature = {protrusion=mnrb}},
 			},
 			ItalicFeatures={
 				SizeFeatures={
 					{Size={-8.4},Font=MinionPro-ItCapt},
-				{Size={8.4-13},Font=MinionPro-It},
-			{Size={13-19.9},Font=MinionPro-ItSubh},
-			{Size={19.9-},Font=MinionPro-ItDisp}
-			},
-			{RawFeature = {protrusion=mni}},
+					{Size={8.4-13},Font=MinionPro-It},
+					{Size={13-19.9},Font=MinionPro-ItSubh},
+					{Size={19.9-},Font=MinionPro-ItDisp}
+				},
+				{RawFeature = {protrusion=mni}},
 			},
 			BoldItalicFeatures={
 				SizeFeatures={
 					{Size={-8.4},Font=MinionPro-BoldItCapt},
-				{Size={8.4-13},Font=MinionPro-BoldIt},
-			{Size={13-19.9},Font=MinionPro-BoldItSubh},
-			{Size={19.9-},Font=MinionPro-BoldItDisp}
-			},
-			{RawFeature = {protrusion=mnib}}
+					{Size={8.4-13},Font=MinionPro-BoldIt},
+					{Size={13-19.9},Font=MinionPro-BoldItSubh},
+					{Size={19.9-},Font=MinionPro-BoldItDisp}
+				},
+				{RawFeature = {protrusion=mnib}}
 			},
 			RawFeature= {expansion=default},
 		]{Minion Pro}
@@ -201,7 +204,7 @@
 \RequirePackage[outline]{contour}
 \RequirePackage[skins,theorems]{tcolorbox}
 % TIKZ LIBRARIES
-\nottoggle{hasnotikzlibs}{
+\iftoggle{hastikzlibs}{
 	\usetikzlibrary{
 		calc,
 		arrows,
@@ -349,33 +352,35 @@
 % BIBLIOGRAPHY SETUP %%%%%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\RequirePackage[nottoc,numbib]{tocbibind}
-\RequirePackage[
-	backend=biber,
-	language=british,
-	backref=true,
-	style=verbose-ieee,
-	bibstyle=numeric,
-	citestyle=numeric,
-	sorting=none,
-]{biblatex}
+\iftoggle{hasbib}{
+	\RequirePackage[nottoc,numbib]{tocbibind}
+	\RequirePackage[
+		backend=biber,
+		language=british,
+		backref=true,
+		style=verbose-ieee,
+		bibstyle=numeric,
+		citestyle=numeric,
+		sorting=none,
+	]{biblatex}
 
-\DefineBibliographyStrings{english}{%
-	backrefpage = {page},% originally "cited on page"
-	backrefpages = {pages},% originally "cited on pages"
-}
-\DeclareCiteCommand{\supercite}[\mkbibsuperscript]
-{\iffieldundef{prenote}
+	\DefineBibliographyStrings{english}{%
+		backrefpage = {page},% originally "cited on page"
+		backrefpages = {pages},% originally "cited on pages"
+	}
+	\DeclareCiteCommand{\supercite}[\mkbibsuperscript]
+	{\iffieldundef{prenote}
+		{}
+		{\BibliographyWarning{Ignoring prenote argument}}%
+		\iffieldundef{postnote}
+		{}
+		{\BibliographyWarning{Ignoring postnote argument}}}
+	{\usebibmacro{citeindex}%
+		\bibopenbracket\usebibmacro{cite}\bibclosebracket}
+	{\supercitedelim}
 	{}
-	{\BibliographyWarning{Ignoring prenote argument}}%
-	\iffieldundef{postnote}
-	{}
-	{\BibliographyWarning{Ignoring postnote argument}}}
-{\usebibmacro{citeindex}%
-	\bibopenbracket\usebibmacro{cite}\bibclosebracket}
-{\supercitedelim}
-{}
-\let\cite=\supercite
+	\let\cite=\supercite
+}{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -520,15 +525,15 @@
 			\let \footnote \thanks
 			{\LARGE \@module \\ \@title \par}
 			\vskip 1.5em
-			{\large
-				\lineskip .5em
-				\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
-					\par}{
-					\begin{tabular}[t]{c}
-						\@author \\
-						\@matricno
-					\end{tabular}\par}}
-			\nottoggle{hasnodate}{\vskip 1em{\Large \@date}}{}
+				{\large
+					\lineskip .5em
+					\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+						\par}{
+						\begin{tabular}[t]{c}
+							\@author \\
+							\@matricno
+						\end{tabular}\par}}
+			\iftoggle{hasdate}{\vskip 1em{\Large \@date}}{}
 		\end{center}
 		\par
 		\vskip 1.5em
@@ -543,15 +548,15 @@
 			\let \footnote \thanks
 			{\LARGE \@module \\ \@title \par}
 			\vskip 1.5em
-			{\large
-				\lineskip .5em
-				\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
-					\par}{
-					\begin{tabular}[t]{c}
-						\@author \\
-						\@matricno
-					\end{tabular}\par}}
-			\nottoggle{hasnodate}{\vskip 1em {\Large \@date}}{}
+				{\large
+					\lineskip .5em
+					\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+						\par}{
+						\begin{tabular}[t]{c}
+							\@author \\
+							\@matricno
+						\end{tabular}\par}}
+			\iftoggle{hasdate}{\vskip 1em {\Large \@date}}{}
 		\end{center}
 		\par
 		\vskip 1.5em
@@ -570,17 +575,17 @@
 				\begin{center}%
 					{\Huge \@module \\ \@title \par}%
 					\vskip 3em%
-					{\Large
-						\lineskip .75em%
-						\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
-							\par}{
-							\begin{tabular}[t]{c}
-								\@author \\
-								\@matricno
-							\end{tabular}\par}}%
-					\nottoggle{hasnodate}{
+						{\Large
+							\lineskip .75em%
+							\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+								\par}{
+								\begin{tabular}[t]{c}
+									\@author \\
+									\@matricno
+								\end{tabular}\par}}%
+					\iftoggle{hasdate}{
 						\vskip 1.5em%
-						{\Large \@date \par}
+							{\Large \@date \par}
 					}{}
 				\end{center}\par
 				\@thanks
@@ -606,14 +611,14 @@
 				\let \footnote \thanks
 				{\LARGE \@module \\ \@title \par}
 				\vskip 1.5em
-				{\Large
-					\lineskip .5em
-					\begin{tabular}[t]{c}
-						\@author \\
-						\@matricno
-					\end{tabular}\par}
+					{\Large
+						\lineskip .5em
+						\begin{tabular}[t]{c}
+							\@author \\
+							\@matricno
+						\end{tabular}\par}
 				\vskip 1em
-				{\Large \@date}
+					{\Large \@date}
 			\end{center}
 			\par
 			\vskip 1.5em
