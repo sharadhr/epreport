@@ -31,7 +31,7 @@
 \newtoggle{hasbib}
 \DeclareOption{tikzlibs}{\toggletrue{hastikzlibs}}
 \DeclareOption{date}{\toggletrue{hasdate}}
-\DeclareOption{bib}{\toggletrue{hasbib}}
+\DeclareOption{bibtex}{\toggletrue{hasbib}}
 
 
 %%%%% PROCESS THE OPTIONS %%%%%
