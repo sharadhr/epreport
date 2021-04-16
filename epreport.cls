@@ -313,6 +313,17 @@
 \providerobustcmd{\complexes}{\mathbb{C}}
 \providerobustcmd{\tomb}{\quad\blacksquare{}}
 
+\providerobustcmd*{\ra}[2][]{%
+	\ang[
+		math-degree=\textsuperscript{h},
+		text-degree=\textsuperscript{h},
+		math-arcminute=\textsuperscript{m},
+		text-arcminute=\textsuperscript{m},
+		math-arcsecond=\textsuperscript{s},
+		text-arcsecond=\textsuperscript{s},
+		#1]{#2}%
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % CLEVEREF AND HYPERREF SETUP %%%%%
