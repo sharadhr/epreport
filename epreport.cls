@@ -163,6 +163,7 @@
 \RequirePackage[super]{nth}
 
 %%%%% SCIENCE FORMATTING AND LANGUAGE %%%%%
+\RequirePackage{mathtools}
 \RequirePackage{physics}
 \RequirePackage[
 	arc-separator = \,,
@@ -217,7 +218,7 @@
 		pgfplots.dateplot,
 		external,
 	}
-	\tikzexternalize[prefix=figures/]
+	% \tikzexternalize[prefix=figures/]
 }{}
 \pgfplotsset{compat=newest}
 \contourlength{1pt}
