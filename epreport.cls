@@ -208,10 +208,12 @@
 \iftoggle{hastikzlibs}{
 	\usetikzlibrary{
 		arrows,
+		arrows.meta,
 		angles,
 		calc,
 		calligraphy,
-		decorations,
+		decorations.pathreplacing,
+		decorations.markings,
 		external,
 		positioning,
 		pgfplots.dateplot,
@@ -251,6 +253,15 @@
 		\IfBooleanTF#1{\fill[radius=.6*\radius] circle;}{}
 	\end{tikzpicture}
 }
+
+%%%%% MID ARROW DECORATION %%%%%
+\tikzset{->-/.style={postaction={decorate,decoration={
+		markings,
+		mark=at position #1 with {\arrow{Stealth}}
+	}}},
+>=Stealth
+}
+
 
 \renewrobustcmd{\tabularxcolumn}[1]{m{#1}}
 
@@ -510,14 +521,14 @@
 			\let \footnote \thanks
 			{\LARGE \@module \\ \@title \par}
 			\vskip 1.5em
-				{\large
-					\lineskip .5em
-					\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
-						\par}{
-						\begin{tabular}[t]{c}
-							\@author \\
-							\@matricno
-						\end{tabular}\par}}
+			{\large
+				\lineskip .5em
+				\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+					\par}{
+					\begin{tabular}[t]{c}
+						\@author \\
+						\@matricno
+					\end{tabular}\par}}
 			\iftoggle{hasdate}{\vskip 1em{\Large \@date}}{}
 		\end{center}
 		\par
@@ -533,14 +544,14 @@
 			\let \footnote \thanks
 			{\LARGE \@module \\ \@title \par}
 			\vskip 1.5em
-				{\large
-					\lineskip .5em
-					\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
-						\par}{
-						\begin{tabular}[t]{c}
-							\@author \\
-							\@matricno
-						\end{tabular}\par}}
+			{\large
+				\lineskip .5em
+				\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+					\par}{
+					\begin{tabular}[t]{c}
+						\@author \\
+						\@matricno
+					\end{tabular}\par}}
 			\iftoggle{hasdate}{\vskip 1em {\Large \@date}}{}
 		\end{center}
 		\par
@@ -560,17 +571,17 @@
 				\begin{center}%
 					{\Huge \@module \\ \@title \par}%
 					\vskip 3em%
-						{\Large
-							\lineskip .75em%
-							\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
-								\par}{
-								\begin{tabular}[t]{c}
-									\@author \\
-									\@matricno
-								\end{tabular}\par}}%
+					{\Large
+						\lineskip .75em%
+						\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+							\par}{
+							\begin{tabular}[t]{c}
+								\@author \\
+								\@matricno
+							\end{tabular}\par}}%
 					\iftoggle{hasdate}{
 						\vskip 1.5em%
-							{\Large \@date \par}
+						{\Large \@date \par}
 					}{}
 				\end{center}\par
 				\@thanks
@@ -596,14 +607,14 @@
 				\let \footnote \thanks
 				{\LARGE \@module \\ \@title \par}
 				\vskip 1.5em
-					{\Large
-						\lineskip .5em
-						\begin{tabular}[t]{c}
-							\@author \\
-							\@matricno
-						\end{tabular}\par}
+				{\Large
+					\lineskip .5em
+					\begin{tabular}[t]{c}
+						\@author \\
+						\@matricno
+					\end{tabular}\par}
 				\vskip 1em
-					{\Large \@date}
+				{\Large \@date}
 			\end{center}
 			\par
 			\vskip 1.5em
