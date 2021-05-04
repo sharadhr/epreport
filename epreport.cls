@@ -214,9 +214,11 @@
 		calligraphy,
 		decorations.pathreplacing,
 		decorations.markings,
+		decorations.text,
 		external,
 		positioning,
 		pgfplots.dateplot,
+		quotes,
 	}
 	% \tikzexternalize[prefix=figures/]
 }{}
@@ -279,6 +281,8 @@
 % MATHS MACROS AND SIUNITX SETUP %%%%%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewrobustcmd{\earth}{\oplus}
 
 \DeclareSIUnit{\year}{y}
 \DeclareSIUnit{\AU}{AU}
