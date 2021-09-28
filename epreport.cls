@@ -33,7 +33,6 @@
 \DeclareOption{date}{\toggletrue{hasdate}}
 \DeclareOption{bibtex}{\toggletrue{hasbib}}
 
-
 %%%%% PROCESS THE OPTIONS %%%%%
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{\@classtype}}
 \ProcessOptions\relax
@@ -84,7 +83,7 @@
 	}{}
 	\ifboolexpr{bool{xetex} or bool{luatex}}{
 		\RequirePackage{fontspec}
-		\RequirePackage[math-style=ISO,bold-style=ISO]{unicode-math}
+		\RequirePackage[math-style=ISO,bold-style=ISO,warnings-off={mathtools-colon,mathtools-overbracket}]{unicode-math}
 		\setmathfont[
 			Script = Math,
 			SizeFeatures = {
@@ -168,7 +167,6 @@
 \RequirePackage[
 	arc-separator = \,,
 	retain-explicit-plus,
-	%inter-unit-product =\cdot,
 	detect-weight=true,
 	detect-family=true,
 	detect-mode=true,
@@ -180,6 +178,7 @@
 \RequirePackage{circledsteps}
 \RequirePackage[british]{babel}
 \RequirePackage{csquotes}
+\RequirePackage[acronym]{glossaries}
 % OPTIONS SETUP
 \renewrobustcmd{\CancelColor}{\color{red}}
 \pgfkeys{
@@ -203,9 +202,10 @@
 \RequirePackage{tabularx}
 \RequirePackage{booktabs}
 \RequirePackage[outline]{contour}
+\RequirePackage[l3]{csvsimple}
 \RequirePackage[skins,theorems]{tcolorbox}
 % TIKZ LIBRARIES
-\iftoggle{hastikzlibs}{
+\iftoggle{hastikzlibs}{%
 	\usetikzlibrary{
 		arrows,
 		arrows.meta,
@@ -221,9 +221,38 @@
 		quotes,
 	}
 	% \tikzexternalize[prefix=figures/]
+
+	%%%%% TIKZ CIRCLES %%%%%
+	\providerobustcmd*\circled[1]{
+		\begin{tikzpicture}[baseline=(char.base)]
+			\node[shape=circle, draw, minimum size=1.5em, inner sep=0pt] (char) {#1};
+		\end{tikzpicture}
+	}
+
+	%%%%% RADIO BUTTONS %%%%%
+	\NewDocumentCommand\radiobutton{s}{
+		\begin{tikzpicture}
+			\pgfmathsetlengthmacro\radius{height("X")/2}
+			\draw[radius=\radius] circle;
+			\IfBooleanTF#1{\fill[radius=.6*\radius] circle;}{}
+		\end{tikzpicture}
+	}
+
+	%%%%% MID ARROW DECORATION %%%%%
+	\tikzset{->-/.style={postaction={decorate,decoration={
+			markings,
+			mark=at position #1 with {\arrow{Stealth}}
+		}}},
+	>=Stealth
+	}
 }{}
 \pgfplotsset{compat=newest}
 \contourlength{1pt}
+
+%%%%% DEFAULT CENTRED FLOATS %%%%%
+\g@addto@macro\@floatboxreset{\centering}
+\g@addto@macro\@subfloatboxreset{\centering}
+
 % TCOLORBOX SETUP
 \tcbset{
 	shield externalize,
@@ -234,34 +263,6 @@
 		arc=0pt,
 		boxrule=1pt
 	}
-}
-
-%%%%% TIKZ CIRCLES %%%%%
-\providerobustcmd*\circled[1]{
-	\begin{tikzpicture}[baseline=(char.base)]
-		\node[shape=circle, draw, minimum size=1.5em, inner sep=0pt] (char) {#1};
-	\end{tikzpicture}
-}
-
-%%%%% DEFAULT CENTRED FLOATS %%%%%
-\g@addto@macro\@floatboxreset{\centering}
-\g@addto@macro\@subfloatboxreset{\centering}
-
-%%%%% RADIO BUTTONS %%%%%
-\NewDocumentCommand\radiobutton{s}{
-	\begin{tikzpicture}
-		\pgfmathsetlengthmacro\radius{height("X")/2}
-		\draw[radius=\radius] circle;
-		\IfBooleanTF#1{\fill[radius=.6*\radius] circle;}{}
-	\end{tikzpicture}
-}
-
-%%%%% MID ARROW DECORATION %%%%%
-\tikzset{->-/.style={postaction={decorate,decoration={
-		markings,
-		mark=at position #1 with {\arrow{Stealth}}
-	}}},
->=Stealth
 }
 
 
@@ -491,8 +492,8 @@
 
 %%%%% SET TABULAR FIGURES IN TABLES %%%%%
 \AtBeginEnvironment{tabular}{
-	\tablining
-	\sisetup{text-rm={\tablining}}
+	% \tablining
+	% \sisetup{text-rm={\tablining}}
 }
 
 \setlength{\jot}{8pt}
@@ -525,15 +526,15 @@
 			\let \footnote \thanks
 			{\LARGE \@module \\ \@title \par}
 			\vskip 1.5em
-			{\large
-				\lineskip .5em
-				\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
-					\par}{
-					\begin{tabular}[t]{c}
-						\@author \\
-						\@matricno
-					\end{tabular}\par}}
-			\iftoggle{hasdate}{\vskip 1em{\Large \@date}}{}
+				{\large
+					\lineskip .5em
+					\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+						\par}{
+						\begin{tabular}[t]{c}
+							\@author \\
+							\@matricno
+						\end{tabular}\par}}
+			\iftoggle{hasdate}{\vskip 1em{\large \@date}}{}
 		\end{center}
 		\par
 		\vskip 1.5em
@@ -548,15 +549,15 @@
 			\let \footnote \thanks
 			{\LARGE \@module \\ \@title \par}
 			\vskip 1.5em
-			{\large
-				\lineskip .5em
-				\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
-					\par}{
-					\begin{tabular}[t]{c}
-						\@author \\
-						\@matricno
-					\end{tabular}\par}}
-			\iftoggle{hasdate}{\vskip 1em {\Large \@date}}{}
+				{\large
+					\lineskip .5em
+					\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+						\par}{
+						\begin{tabular}[t]{c}
+							\@author \\
+							\@matricno
+						\end{tabular}\par}}
+			\iftoggle{hasdate}{\vskip 1em {\large \@date}}{}
 		\end{center}
 		\par
 		\vskip 1.5em
@@ -575,17 +576,15 @@
 				\begin{center}%
 					{\Huge \@module \\ \@title \par}%
 					\vskip 3em%
-					{\Large
-						\lineskip .75em%
-						\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
-							\par}{
-							\begin{tabular}[t]{c}
-								\@author \\
-								\@matricno
-							\end{tabular}\par}}%
-					\iftoggle{hasdate}{
-						\vskip 1.5em%
-						{\Large \@date \par}
+						{\Large
+							\lineskip .75em%
+							\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
+								\par}{
+								\begin{tabular}[t]{c}
+									\@author \\
+									\@matricno
+								\end{tabular}\par}}%
+					\iftoggle{hasdate}{\vskip 1.5em{\large \@date \par}
 					}{}
 				\end{center}\par
 				\@thanks
@@ -611,14 +610,13 @@
 				\let \footnote \thanks
 				{\LARGE \@module \\ \@title \par}
 				\vskip 1.5em
-				{\Large
-					\lineskip .5em
-					\begin{tabular}[t]{c}
-						\@author \\
-						\@matricno
-					\end{tabular}\par}
-				\vskip 1em
-				{\Large \@date}
+					{\Large
+						\lineskip .5em
+						\begin{tabular}[t]{c}
+							\@author \\
+							\@matricno
+						\end{tabular}\par}
+				\iftoggle{hasdate}{\vskip 1em {\large \@date}}{}
 			\end{center}
 			\par
 			\vskip 1.5em
