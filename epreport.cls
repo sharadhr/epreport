@@ -175,22 +175,19 @@
 ]{siunitx}
 \RequirePackage[version=4]{mhchem}
 \RequirePackage[makeroom]{cancel}
-\RequirePackage{circledsteps}
 \RequirePackage[british]{babel}
 \RequirePackage{csquotes}
 \RequirePackage[acronym]{glossaries}
 % OPTIONS SETUP
 \renewrobustcmd{\CancelColor}{\color{red}}
-\pgfkeys{
-	/csteps/inner xsep=12pt,
-	/csteps/inner ysep=12pt,
-}
+\renewrobustcmd{\emph}[1]{\textsl{#1}}
 
 %%%%% GRAPHICS, CAPTIONS, TABLES %%%%%
-\PassOptionsToPackage{table,dvipsnames}{xcolor}
+\RequirePackage[table,dvipsnames,x11names]{xcolor}
 \RequirePackage{graphicx}
 \RequirePackage{float}
 \RequirePackage{tikz,tikz-3dplot}
+\RequirePackage{nicematrix}
 \RequirePackage{pgfplots}
 \RequirePackage{pdfpages}
 \RequirePackage[
@@ -219,15 +216,9 @@
 		positioning,
 		pgfplots.dateplot,
 		quotes,
+		shapes.multipart
 	}
 	% \tikzexternalize[prefix=figures/]
-
-	%%%%% TIKZ CIRCLES %%%%%
-	\providerobustcmd*\circled[1]{
-		\begin{tikzpicture}[baseline=(char.base)]
-			\node[shape=circle, draw, minimum size=1.5em, inner sep=0pt] (char) {#1};
-		\end{tikzpicture}
-	}
 
 	%%%%% RADIO BUTTONS %%%%%
 	\NewDocumentCommand\radiobutton{s}{
@@ -246,6 +237,12 @@
 	>=Stealth
 	}
 }{}
+%%%%% TIKZ CIRCLES %%%%%
+\providerobustcmd*\circled[1]{
+	\begin{tikzpicture}[baseline=(char.base)]
+		\node[shape=circle, draw, minimum size=1.6em, inner sep=0pt] (char) {#1};
+	\end{tikzpicture}
+}
 \pgfplotsset{compat=newest}
 \contourlength{1pt}
 
@@ -264,7 +261,6 @@
 		boxrule=1pt
 	}
 }
-
 
 \renewrobustcmd{\tabularxcolumn}[1]{m{#1}}
 
@@ -341,7 +337,7 @@
 
 \hypersetup{
 	colorlinks	= true,			% Colours links instead of ugly boxes
-	urlcolor	= blue,			% Colour for external hyperlinks
+	urlcolor	= magenta,			% Colour for external hyperlinks
 	linkcolor	= magenta,		% Colour of internal links
 	citecolor	= teal			% Colour of citations
 }
@@ -421,7 +417,7 @@
 	\renewrobustcmd{\choiceshook}{
 		\setlength{\labelsep}{10pt}
 		\settowidth{\leftmargin}{\circled{W}.\hspace{5pt}\hspace{0em}}
-		\setlength{\itemsep}{8pt}
+		\setlength{\itemsep}{6pt}
 	}
 
 	\renewrobustcmd{\solutiontitle}{
@@ -432,21 +428,19 @@
 	\newlist{statements}{enumerate}{1}
 	\setlist[statements]{align=left,leftmargin=*,parsep=8pt,label=\textbf{\Roman{*}}.}
 
-
 	%%%%% MCQ STATEMENTS AND CHOICES ON ONE PAGE %%%%%
 	\BeforeBeginEnvironment{choices}{\par\nopagebreak\minipage{\linewidth}}
 	\AfterEndEnvironment{choices}{\endminipage}
 	\BeforeBeginEnvironment{statements}{\par\nopagebreak\minipage{\linewidth}}
 	\AfterEndEnvironment{statements}{\endminipage\vspace*{6pt}}
 
-
 	%%%%% ONEPAR CHOICES SPREAD %%%%%
 	\patchcmd{\oneparchoices}{\penalty -50\hskip 1em plus 1em\relax}{\hfill}{}{}
 	\patchcmd{\oneparchoices}{\penalty -50\hskip 1em plus 1em\relax}{\hfill}{}{}
 
 	%%%%% SOLUTION ENVIRONMENT %%%%%
-	\SolutionEmphasis{\color{blue}}
-	\correctchoiceemphasis{\color{blue}\bfseries\boldmath}
+	\SolutionEmphasis{\color{Blue4}}
+	\correctchoiceemphasis{\color{Blue4}}
 	\marksnotpoints{}
 	\pointsinrightmargin{}
 	\pointsdroppedatright{}
@@ -495,8 +489,6 @@
 	% \tablining
 	% \sisetup{text-rm={\tablining}}
 }
-
-\setlength{\jot}{8pt}
 
 %%%%% COPY-PASTABLE PDF %%%%%
 \ifbool{pdftex}{
