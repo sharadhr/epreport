@@ -46,10 +46,17 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \iftoggle{islmodern}{
-	\RequirePDFTeX
-	\RequirePackage[utf8]{inputenc}
-	\RequirePackage{mlmodern}
-	\RequirePackage{amsmath, amsfonts, amssymb}
+	\ifbool{pdftex}{
+		\RequirePackage[T1]{fontenc}
+		\RequirePackage{mlmodern}
+		\RequirePackage[utf8]{inputenc}
+	}{}
+	\ifboolexpr{bool{xetex} or bool{luatex}}{
+		\RequirePackage[utf8]{inputenc}
+		\RequirePackage[T1]{fontenc}
+		\RequirePackage{mlmodern}
+	}{}
+	\RequirePackage{amsmath, amsfonts}
 	% \pdfmapfile{=mlm-substitute.map}
 	%%%%% Define tabular-lining as nothing
 	\providerobustcmd{\tablining}{\relax}
@@ -150,6 +157,7 @@
 \WarningFilter{latexfont}{Font shape}
 %%%%% GEOMETRY, PAGE SETUP, SPACING, PARAGRAPHING %%%%%
 \RequirePackage[margin=2.5cm,a4paper]{geometry}
+\RequirePackage{relsize}
 \RequirePackage{titlesec}
 \RequirePackage{appendix}
 \RequirePackage{multicol}
@@ -183,7 +191,6 @@
 \renewrobustcmd{\emph}[1]{\textsl{#1}}
 
 %%%%% GRAPHICS, CAPTIONS, TABLES %%%%%
-\RequirePackage[table,dvipsnames,x11names]{xcolor}
 \RequirePackage{graphicx}
 \RequirePackage{float}
 \RequirePackage{tikz,tikz-3dplot}
@@ -201,12 +208,14 @@
 \RequirePackage[outline]{contour}
 \RequirePackage[l3]{csvsimple}
 \RequirePackage[skins,theorems]{tcolorbox}
+\PassOptionsToPackage{table,dvipsnames,x11names}{xcolor}
 % TIKZ LIBRARIES
 \iftoggle{hastikzlibs}{%
 	\usetikzlibrary{
+		angles,
 		arrows,
 		arrows.meta,
-		angles,
+		automata,
 		calc,
 		calligraphy,
 		decorations.pathreplacing,
@@ -216,9 +225,11 @@
 		positioning,
 		pgfplots.dateplot,
 		quotes,
-		shapes.multipart
+		shapes.multipart,
+		\ifbool{luatex}{graphs,graphdrawing}{}
 	}
-	% \tikzexternalize[prefix=figures/]
+	\tikzexternalize[prefix=figures/]
+	\tikzset{external/system call={lualatex \tikzexternalcheckshellescape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource"}}
 
 	%%%%% RADIO BUTTONS %%%%%
 	\NewDocumentCommand\radiobutton{s}{
@@ -234,7 +245,7 @@
 			markings,
 			mark=at position #1 with {\arrow{Stealth}}
 		}}},
-	>=Stealth
+	>=Stealth[round]
 	}
 }{}
 %%%%% TIKZ CIRCLES %%%%%
@@ -309,6 +320,11 @@
 		text-arcsecond=\textsuperscript{s},
 		#1]{#2}%
 }
+
+% C++ macro
+\providerobustcmd{\Cpp}[1]{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\relsize{-3}{\textbf{++}}}#1}
+% C# macro
+\providerobustcmd{\Cs}{C\texttt{\#}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
