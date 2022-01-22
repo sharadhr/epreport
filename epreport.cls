@@ -5,6 +5,8 @@
 
 %%%%% MISCELLANEOUS BUT PRIMARY IMPORTS %%%%%
 \RequirePackage{iftex,etoolbox,expl3,xparse,silence}
+% Import early to avoid option errors
+\RequirePackage[table,dvipsnames,x11names]{xcolor}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -29,9 +31,13 @@
 \newtoggle{hastikzlibs}
 \newtoggle{hasdate}
 \newtoggle{hasbib}
+\newtoggle{apabib}
+\newtoggle{ieeebib}
 \DeclareOption{tikzlibs}{\toggletrue{hastikzlibs}}
 \DeclareOption{date}{\toggletrue{hasdate}}
 \DeclareOption{bibtex}{\toggletrue{hasbib}}
+\DeclareOption{apabib}{\toggletrue{apabib}}
+\DeclareOption{ieeebib}{\toggletrue{ieeebib}}
 
 %%%%% PROCESS THE OPTIONS %%%%%
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{\@classtype}}
@@ -46,7 +52,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \iftoggle{islmodern}{
-	\RequirePDFTeX
+	\RequirePackage[T1]{fontenc}
 	\RequirePackage[utf8]{inputenc}
 	\RequirePackage{mlmodern}
 	\RequirePackage{amsmath, amsfonts, amssymb}
@@ -134,7 +140,7 @@
 			},
 			RawFeature= {expansion=default},
 		]{Minion Pro}
-		% TODO: More detailed Xe/LuaTeX code
+		% TODO: More detailed Xe/LuaTeX code; migrate Minion Pro handling to another class/package
 	}{}
 }{}
 
@@ -183,7 +189,6 @@
 \renewrobustcmd{\emph}[1]{\textsl{#1}}
 
 %%%%% GRAPHICS, CAPTIONS, TABLES %%%%%
-\RequirePackage[table,dvipsnames,x11names]{xcolor}
 \RequirePackage{graphicx}
 \RequirePackage{float}
 \RequirePackage{tikz,tikz-3dplot}
@@ -351,6 +356,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \iftoggle{hasbib}{
 	\RequirePackage[nottoc,numbib]{tocbibind}
+	\iftoggle{ieeebib}{
 	\RequirePackage[
 		backend=biber,
 		language=british,
@@ -377,6 +383,15 @@
 	{\supercitedelim}
 	{}
 	\let\cite=\supercite
+}{}
+	\iftoggle{apabib}{
+		\RequirePackage[
+			backend=biber,
+			style=apa,
+			language=british,
+		]{biblatex}
+	}{}
+	\RequirePackage{biblatex}
 }{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -439,8 +454,8 @@
 	\patchcmd{\oneparchoices}{\penalty -50\hskip 1em plus 1em\relax}{\hfill}{}{}
 
 	%%%%% SOLUTION ENVIRONMENT %%%%%
-	\SolutionEmphasis{\color{Blue4}}
-	\correctchoiceemphasis{\color{Blue4}}
+	\SolutionEmphasis{\color{blue}}
+	\correctchoiceemphasis{\color{blue}}
 	\marksnotpoints{}
 	\pointsinrightmargin{}
 	\pointsdroppedatright{}
