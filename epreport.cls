@@ -5,6 +5,8 @@
 
 %%%%% MISCELLANEOUS BUT PRIMARY IMPORTS %%%%%
 \RequirePackage{iftex,etoolbox,expl3,xparse,silence}
+% Import early to avoid option errors
+\RequirePackage[table,dvipsnames,x11names]{xcolor}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -29,9 +31,13 @@
 \newtoggle{hastikzlibs}
 \newtoggle{hasdate}
 \newtoggle{hasbib}
+\newtoggle{apabib}
+\newtoggle{ieeebib}
 \DeclareOption{tikzlibs}{\toggletrue{hastikzlibs}}
 \DeclareOption{date}{\toggletrue{hasdate}}
 \DeclareOption{bibtex}{\toggletrue{hasbib}}
+\DeclareOption{apabib}{\toggletrue{apabib}}
+\DeclareOption{ieeebib}{\toggletrue{ieeebib}}
 
 %%%%% PROCESS THE OPTIONS %%%%%
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{\@classtype}}
@@ -46,17 +52,10 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \iftoggle{islmodern}{
-	\ifbool{pdftex}{
-		\RequirePackage[T1]{fontenc}
-		\RequirePackage{mlmodern}
-		\RequirePackage[utf8]{inputenc}
-	}{}
-	\ifboolexpr{bool{xetex} or bool{luatex}}{
-		\RequirePackage[utf8]{inputenc}
-		\RequirePackage[T1]{fontenc}
-		\RequirePackage{mlmodern}
-	}{}
-	\RequirePackage{amsmath, amsfonts}
+	\RequirePackage[T1]{fontenc}
+	\RequirePackage[utf8]{inputenc}
+	\RequirePackage{mlmodern}
+	\RequirePackage{amsmath, amsfonts, amssymb}
 	% \pdfmapfile{=mlm-substitute.map}
 	%%%%% Define tabular-lining as nothing
 	\providerobustcmd{\tablining}{\relax}
@@ -141,7 +140,7 @@
 			},
 			RawFeature= {expansion=default},
 		]{Minion Pro}
-		% TODO: More detailed Xe/LuaTeX code
+		% TODO: More detailed Xe/LuaTeX code; migrate Minion Pro handling to another class/package
 	}{}
 }{}
 
@@ -367,6 +366,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \iftoggle{hasbib}{
 	\RequirePackage[nottoc,numbib]{tocbibind}
+	\iftoggle{ieeebib}{
 	\RequirePackage[
 		backend=biber,
 		language=british,
@@ -393,6 +393,15 @@
 	{\supercitedelim}
 	{}
 	\let\cite=\supercite
+}{}
+	\iftoggle{apabib}{
+		\RequirePackage[
+			backend=biber,
+			style=apa,
+			language=british,
+		]{biblatex}
+	}{}
+	\RequirePackage{biblatex}
 }{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -455,8 +464,8 @@
 	\patchcmd{\oneparchoices}{\penalty -50\hskip 1em plus 1em\relax}{\hfill}{}{}
 
 	%%%%% SOLUTION ENVIRONMENT %%%%%
-	\SolutionEmphasis{\color{Blue4}}
-	\correctchoiceemphasis{\color{Blue4}}
+	\SolutionEmphasis{\color{blue}}
+	\correctchoiceemphasis{\color{blue}}
 	\marksnotpoints{}
 	\pointsinrightmargin{}
 	\pointsdroppedatright{}
