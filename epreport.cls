@@ -53,7 +53,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \iftoggle{islmodern}{
 	\RequirePackage[T1]{fontenc}
-	ifbool{pdftex}{\RequirePackage[utf8]{inputenc}}
+	\ifbool{pdftex}{\RequirePackage[utf8]{inputenc}}{}
 	\RequirePackage{mlmodern}
 	\RequirePackage{amsmath, amsfonts}
 	% \pdfmapfile{=mlm-substitute.map}
