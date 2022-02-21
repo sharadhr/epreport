@@ -155,7 +155,7 @@
 % Silence font shape warning from wasysym
 \WarningFilter{latexfont}{Font shape}
 %%%%% GEOMETRY, PAGE SETUP, SPACING, PARAGRAPHING %%%%%
-\RequirePackage[margin=2.5cm,a4paper]{geometry}
+\RequirePackage[margin=1.5cm,a4paper]{geometry}
 \RequirePackage{relsize}
 \RequirePackage{titlesec}
 \RequirePackage{appendix}
@@ -285,7 +285,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% MATHS MACROS AND SIUNITX SETUP %%%%%
+% MATHS,TYPESETTING MACROS AND SIUNITX SETUP %%%%%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -542,19 +542,18 @@
 		\begin{center}
 			\let \footnote \thanks
 			{\LARGE \@module \\ \@title \par}
-			\vskip 1.5em
+			\vskip 0.5em
 				{\large
-					\lineskip .5em
 					\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
 						\par}{
 						\begin{tabular}[t]{c}
 							\@author \\
 							\@matricno
 						\end{tabular}\par}}
-			\iftoggle{hasdate}{\vskip 1em{\large \@date}}{}
+			\iftoggle{hasdate}{\vskip 0.5em{\@date}}{}
 		\end{center}
 		\par
-		\vskip 1.5em
+		\vskip 1em
 	}
 }{}
 
@@ -565,19 +564,18 @@
 		\begin{center}
 			\let \footnote \thanks
 			{\LARGE \@module \\ \@title \par}
-			\vskip 1.5em
+			\vskip 1em
 				{\large
-					\lineskip .5em
 					\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
 						\par}{
 						\begin{tabular}[t]{c}
 							\@author \\
 							\@matricno
 						\end{tabular}\par}}
-			\iftoggle{hasdate}{\vskip 1em {\large \@date}}{}
+			\iftoggle{hasdate}{\vskip 0.5em {\@date}}{}
 		\end{center}
 		\par
-		\vskip 1.5em
+		\vskip 1em
 	}
 }{}
 
@@ -601,7 +599,7 @@
 									\@author \\
 									\@matricno
 								\end{tabular}\par}}%
-					\iftoggle{hasdate}{\vskip 1.5em{\large \@date \par}
+					\iftoggle{hasdate}{\vskip 1.5em{\@date \par}
 					}{}
 				\end{center}\par
 				\@thanks
