@@ -33,11 +33,13 @@
 \newtoggle{hasbib}
 \newtoggle{apabib}
 \newtoggle{ieeebib}
+\newtoggle{multicol}
 \DeclareOption{tikzlibs}{\toggletrue{hastikzlibs}}
 \DeclareOption{date}{\toggletrue{hasdate}}
 \DeclareOption{bibtex}{\toggletrue{hasbib}}
 \DeclareOption{apabib}{\toggletrue{apabib}}
 \DeclareOption{ieeebib}{\toggletrue{ieeebib}}
+\DeclareOption{multicol}{\toggletrue{multicol}}
 
 %%%%% PROCESS THE OPTIONS %%%%%
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{\@classtype}}
@@ -155,11 +157,11 @@
 % Silence font shape warning from wasysym
 \WarningFilter{latexfont}{Font shape}
 %%%%% GEOMETRY, PAGE SETUP, SPACING, PARAGRAPHING %%%%%
-\RequirePackage[margin=1.5cm,a4paper]{geometry}
+\iftoggle{multicol}{\RequirePackage{multicol}}{\relax}
+\RequirePackage[margin=\iftoggle{multicol}{1.5cm}{2.5cm},a4paper]{geometry}
 \RequirePackage{relsize}
 \RequirePackage{titlesec}
 \RequirePackage{appendix}
-\RequirePackage{multicol}
 \RequirePackage{multirow}
 \RequirePackage{parskip}
 \RequirePackage{tabto}
