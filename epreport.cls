@@ -34,12 +34,14 @@
 \newtoggle{apabib}
 \newtoggle{ieeebib}
 \newtoggle{multicol}
+\newtoggle{minted}
 \DeclareOption{tikzlibs}{\toggletrue{hastikzlibs}}
 \DeclareOption{date}{\toggletrue{hasdate}}
 \DeclareOption{bibtex}{\toggletrue{hasbib}}
 \DeclareOption{apabib}{\toggletrue{apabib}}
 \DeclareOption{ieeebib}{\toggletrue{ieeebib}}
 \DeclareOption{multicol}{\toggletrue{multicol}}
+\DeclareOption{minted}{\toggletrue{minted}}
 
 %%%%% PROCESS THE OPTIONS %%%%%
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{\@classtype}}
@@ -95,51 +97,51 @@
 		\setmathfont[
 			Script = Math,
 			SizeFeatures = {
-				{Size=-6,Font=MinionMath-Tiny,Style=MathScriptScript},
-				{Size=6-8.4,Font=MinionMath-Capt,Style=MathScript},
-				{Size=8.4-,Font=MinionMath-Regular},
-			},
+					{Size=-6,Font=MinionMath-Tiny,Style=MathScriptScript},
+					{Size=6-8.4,Font=MinionMath-Capt,Style=MathScript},
+					{Size=8.4-,Font=MinionMath-Regular},
+				},
 		]{MinionMath-Regular}
 		\setmathfont[range=cal,Contextuals=Swash]{MinionPro-It}
 		\setmathfont[range=frak]{Latin Modern Math}
 		\setmathfont[range=scr]{Latin Modern Math}
 		\setmainfont[
 			UprightFeatures={
-				SizeFeatures={
-					{Size={-8.4},Font=MinionPro-Capt},
-					{Size={8.4-13},Font=MinionPro-Regular},
-					{Size={13-19.9},Font=MinionPro-Subh},
-					{Size={19.9-},Font=MinionPro-Disp}
+					SizeFeatures={
+							{Size={-8.4},Font=MinionPro-Capt},
+							{Size={8.4-13},Font=MinionPro-Regular},
+							{Size={13-19.9},Font=MinionPro-Subh},
+							{Size={19.9-},Font=MinionPro-Disp}
+						},
+					{RawFeature = {protrusion = mnr}},
 				},
-				{RawFeature = {protrusion = mnr}},
-			},
 			BoldFeatures={
-				SizeFeatures={
-					{Size={-8.4},Font=MinionPro-BoldCapt},
-					{Size={8.4-13},Font=MinionPro-Bold},
-					{Size={13-19.9},Font=MinionPro-BoldSubh},
-					{Size={19.9-},Font=MinionPro-BoldDisp}
+					SizeFeatures={
+							{Size={-8.4},Font=MinionPro-BoldCapt},
+							{Size={8.4-13},Font=MinionPro-Bold},
+							{Size={13-19.9},Font=MinionPro-BoldSubh},
+							{Size={19.9-},Font=MinionPro-BoldDisp}
+						},
+					{RawFeature = {protrusion=mnrb}},
 				},
-				{RawFeature = {protrusion=mnrb}},
-			},
 			ItalicFeatures={
-				SizeFeatures={
-					{Size={-8.4},Font=MinionPro-ItCapt},
-					{Size={8.4-13},Font=MinionPro-It},
-					{Size={13-19.9},Font=MinionPro-ItSubh},
-					{Size={19.9-},Font=MinionPro-ItDisp}
+					SizeFeatures={
+							{Size={-8.4},Font=MinionPro-ItCapt},
+							{Size={8.4-13},Font=MinionPro-It},
+							{Size={13-19.9},Font=MinionPro-ItSubh},
+							{Size={19.9-},Font=MinionPro-ItDisp}
+						},
+					{RawFeature = {protrusion=mni}},
 				},
-				{RawFeature = {protrusion=mni}},
-			},
 			BoldItalicFeatures={
-				SizeFeatures={
-					{Size={-8.4},Font=MinionPro-BoldItCapt},
-					{Size={8.4-13},Font=MinionPro-BoldIt},
-					{Size={13-19.9},Font=MinionPro-BoldItSubh},
-					{Size={19.9-},Font=MinionPro-BoldItDisp}
+					SizeFeatures={
+							{Size={-8.4},Font=MinionPro-BoldItCapt},
+							{Size={8.4-13},Font=MinionPro-BoldIt},
+							{Size={13-19.9},Font=MinionPro-BoldItSubh},
+							{Size={19.9-},Font=MinionPro-BoldItDisp}
+						},
+					{RawFeature = {protrusion=mnib}}
 				},
-				{RawFeature = {protrusion=mnib}}
-			},
 			RawFeature= {expansion=default},
 		]{Minion Pro}
 		% TODO: More detailed Xe/LuaTeX code; migrate Minion Pro handling to another class/package
@@ -185,7 +187,7 @@
 \RequirePackage[version=4]{mhchem}
 \RequirePackage[makeroom]{cancel}
 \RequirePackage[british]{babel}
-\RequirePackage{csquotes}
+\iftoggle{minted}{}{\RequirePackage{csquotes}}
 \RequirePackage[acronym]{glossaries}
 % OPTIONS SETUP
 \renewrobustcmd{\CancelColor}{\color{red}}
@@ -198,11 +200,15 @@
 \RequirePackage{nicematrix}
 \RequirePackage{pgfplots}
 \RequirePackage{pdfpages}
+\iftoggle{minted}{
+	\RequirePackage{minted}
+	\RequirePackage{csquotes}}{}
 \RequirePackage[
 	width=0.6\textwidth,
 	labelfont={small,bf},
 	font={small}]{caption}
 \RequirePackage{subcaption}
+\iftoggle{minted}{\DeclareCaptionSubType{listing}}{}
 \RequirePackage{array}
 \RequirePackage{tabularx}
 \RequirePackage{booktabs}
@@ -211,7 +217,7 @@
 \RequirePackage[skins,theorems]{tcolorbox}
 \PassOptionsToPackage{table,dvipsnames,x11names}{xcolor}
 % TIKZ LIBRARIES
-\iftoggle{hastikzlibs}{%
+\iftoggle{hastikzlibs}{
 	\usetikzlibrary{
 		angles,
 		arrows,
@@ -243,9 +249,9 @@
 
 	%%%%% MID ARROW DECORATION %%%%%
 	\tikzset{->-/.style={postaction={decorate,decoration={
-			markings,
-			mark=at position #1 with {\arrow{Stealth}}
-		}}},
+					markings,
+					mark=at position #1 with {\arrow{Stealth}}
+				}}},
 	>=Stealth[round]
 	}
 }{}
@@ -266,19 +272,19 @@
 \tcbset{
 	shield externalize,
 	highlight math style={
-		enhanced,
-		colframe=red,
-		colback=white,
-		arc=0pt,
-		boxrule=1pt
-	}
+			enhanced,
+			colframe=red,
+			colback=white,
+			arc=0pt,
+			boxrule=1pt
+		}
 }
 
 \renewrobustcmd{\tabularxcolumn}[1]{m{#1}}
 
 %%%%% REFERENCES AND LINKS %%%%%
 \RequirePackage{hyperref}
-\RequirePackage[noabbrev,capitalize]{cleveref}
+\RequirePackage[noabbrev,capitalise]{cleveref}
 \RequirePackage{appendix}
 
 %%%%% MISCELLANEOUS %%%%%
@@ -333,24 +339,26 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\iftoggle{minted}{\newcommand\theHlisting{\arabic{listing}}}{}
+
+\captionsetup[subfigure]{subrefformat=simple,labelformat=simple}
+\captionsetup[subtable]{subrefformat=simple,labelformat=simple}
+\captionsetup[sublisting]{subrefformat=simple,labelformat=simple}
+\renewcommand\thesubfigure{(\alph{subfigure})}
+\renewcommand\thesubtable{(\alph{subtable})}
+\renewcommand\thesublisting{(\alph{sublisting})}
+
 \crefdefaultlabelformat{#2\textbf{#1}#3}
 
 \creflabelformat{equation}{#2\textbf{(#1)}#3}
 \creflabelformat{figure}{#2\textbf{#1}#3}
 \creflabelformat{table}{#2\textbf{#1}#3}
+\creflabelformat{listing}{#2\textbf{#1}#3}
 
-\crefname{equation}{\textbf{equation}}{\textbf{equations}}
-\Crefname{equation}{\textbf{Equation}}{\textbf{Equations}}
-\crefname{figure}{\textbf{Figure}}{\textbf{Figures}}
-\Crefname{figure}{\textbf{Figure}}{\textbf{Figures}}
-\crefname{table}{\textbf{Table}}{\textbf{Tables}}
-\Crefname{table}{\textbf{Table}}{\textbf{Tables}}
-\crefname{appendix}{\textbf{Appendix}}{\textbf{Appendices}}
-\Crefname{appendix}{\textbf{Appendix}}{\textbf{Appendices}}
-\crefname{section}{\textbf{\S}}{\textbf{\S}}
-\Crefname{section}{\textbf{\S}}{\textbf{\S}}
-\crefname{algorithm}{\textbf{Algorithm}}{\textbf{Algorithms}}
-\Crefname{algorithm}{\textbf{Algorithm}}{\textbf{Algorithms}}
+\iftoggle{minted}{
+	\crefname{sublisting}{\textbf{Listing}}{\textbf{Listings}}
+	\Crefname{sublisting}{\textbf{Listing}}{\textbf{Listings}}
+}{}
 
 \hypersetup{
 	colorlinks	= true,			% Colours links instead of ugly boxes
@@ -369,33 +377,33 @@
 \iftoggle{hasbib}{
 	\RequirePackage[nottoc,numbib]{tocbibind}
 	\iftoggle{ieeebib}{
-	\RequirePackage[
-		backend=biber,
-		language=british,
-		backref=true,
-		style=verbose-ieee,
-		bibstyle=numeric,
-		citestyle=numeric,
-		sorting=none,
-	]{biblatex}
+		\RequirePackage[
+			backend=biber,
+			language=british,
+			backref=true,
+			style=verbose-ieee,
+			bibstyle=numeric,
+			citestyle=numeric,
+			sorting=none,
+		]{biblatex}
 
-	\DefineBibliographyStrings{english}{%
-		backrefpage = {page},% originally "cited on page"
-		backrefpages = {pages},% originally "cited on pages"
-	}
-	\DeclareCiteCommand{\supercite}[\mkbibsuperscript]
-	{\iffieldundef{prenote}
+		\DefineBibliographyStrings{english}{%
+			backrefpage = {page},% originally "cited on page"
+			backrefpages = {pages},% originally "cited on pages"
+		}
+		\DeclareCiteCommand{\supercite}[\mkbibsuperscript]
+		{\iffieldundef{prenote}
+			{}
+			{\BibliographyWarning{Ignoring prenote argument}}%
+			\iffieldundef{postnote}
+			{}
+			{\BibliographyWarning{Ignoring postnote argument}}}
+		{\usebibmacro{citeindex}%
+			\bibopenbracket\usebibmacro{cite}\bibclosebracket}
+		{\supercitedelim}
 		{}
-		{\BibliographyWarning{Ignoring prenote argument}}%
-		\iffieldundef{postnote}
-		{}
-		{\BibliographyWarning{Ignoring postnote argument}}}
-	{\usebibmacro{citeindex}%
-		\bibopenbracket\usebibmacro{cite}\bibclosebracket}
-	{\supercitedelim}
-	{}
-	\let\cite=\supercite
-}{}
+		\let\cite=\supercite
+	}{}
 	\iftoggle{apabib}{
 		\RequirePackage[
 			backend=biber,
