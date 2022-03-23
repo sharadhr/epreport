@@ -343,19 +343,32 @@
 
 \captionsetup[subfigure]{subrefformat=simple,labelformat=simple}
 \captionsetup[subtable]{subrefformat=simple,labelformat=simple}
-\captionsetup[sublisting]{subrefformat=simple,labelformat=simple}
 \renewcommand\thesubfigure{(\alph{subfigure})}
 \renewcommand\thesubtable{(\alph{subtable})}
-\renewcommand\thesublisting{(\alph{sublisting})}
 
 \crefdefaultlabelformat{#2\textbf{#1}#3}
 
 \creflabelformat{equation}{#2\textbf{(#1)}#3}
 \creflabelformat{figure}{#2\textbf{#1}#3}
 \creflabelformat{table}{#2\textbf{#1}#3}
-\creflabelformat{listing}{#2\textbf{#1}#3}
+
+\crefname{equation}{\textbf{equation}}{\textbf{equations}}
+\Crefname{equation}{\textbf{Equation}}{\textbf{Equations}}
+\crefname{figure}{\textbf{Figure}}{\textbf{Figures}}
+\Crefname{figure}{\textbf{Figure}}{\textbf{Figures}}
+\crefname{table}{\textbf{Table}}{\textbf{Tables}}
+\Crefname{table}{\textbf{Table}}{\textbf{Tables}}
+\crefname{appendix}{\textbf{Appendix}}{\textbf{Appendices}}
+\Crefname{appendix}{\textbf{Appendix}}{\textbf{Appendices}}
+\crefname{section}{\textbf{\S}}{\textbf{\S}}
+\Crefname{section}{\textbf{\S}}{\textbf{\S}}
+\crefname{algorithm}{\textbf{Algorithm}}{\textbf{Algorithms}}
+\Crefname{algorithm}{\textbf{Algorithm}}{\textbf{Algorithms}}
 
 \iftoggle{minted}{
+	\creflabelformat{listing}{#2\textbf{#1}#3}
+	\captionsetup[sublisting]{subrefformat=simple,labelformat=simple}
+	\renewcommand\thesublisting{(\alph{sublisting})}
 	\crefname{sublisting}{\textbf{Listing}}{\textbf{Listings}}
 	\Crefname{sublisting}{\textbf{Listing}}{\textbf{Listings}}
 }{}
