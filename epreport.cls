@@ -5,6 +5,7 @@
 
 %%%%% MISCELLANEOUS BUT PRIMARY IMPORTS %%%%%
 \RequirePackage{iftex,etoolbox,expl3,xparse,silence}
+\ifbool{luatex}{\RequirePackage{shellesc}}{\relax}
 % Import early to avoid option errors
 \RequirePackage[table,dvipsnames,x11names]{xcolor}
 
@@ -35,6 +36,7 @@
 \newtoggle{ieeebib}
 \newtoggle{multicol}
 \newtoggle{minted}
+\newtoggle{tikzexternalise}
 \DeclareOption{tikzlibs}{\toggletrue{hastikzlibs}}
 \DeclareOption{date}{\toggletrue{hasdate}}
 \DeclareOption{bibtex}{\toggletrue{hasbib}}
@@ -42,6 +44,7 @@
 \DeclareOption{ieeebib}{\toggletrue{ieeebib}}
 \DeclareOption{multicol}{\toggletrue{multicol}}
 \DeclareOption{minted}{\toggletrue{minted}}
+\DeclareOption{tikzexternalise}{\toggletrue{tikzexternalise}}
 
 %%%%% PROCESS THE OPTIONS %%%%%
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{\@classtype}}
@@ -202,6 +205,7 @@
 \RequirePackage{pdfpages}
 \iftoggle{minted}{
 	\RequirePackage{minted}
+	\setmintedinline{breaklines}
 	\RequirePackage{csquotes}}{}
 \RequirePackage[
 	width=0.6\textwidth,
@@ -228,15 +232,13 @@
 		decorations.pathreplacing,
 		decorations.markings,
 		decorations.text,
-		external,
 		positioning,
 		pgfplots.dateplot,
 		quotes,
 		shapes.multipart,
 		\ifbool{luatex}{graphs,graphdrawing}{}
 	}
-	\tikzexternalize[prefix=figures/]
-	\tikzset{external/system call={lualatex \tikzexternalcheckshellescape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource"}}
+	\iftoggle{tikzexternalise}{\tikzexternalize[prefix=figures/]}{}
 
 	%%%%% RADIO BUTTONS %%%%%
 	\NewDocumentCommand\radiobutton{s}{
