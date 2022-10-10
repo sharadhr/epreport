@@ -176,7 +176,6 @@
 \RequirePackage[super]{nth}
 
 %%%%% SCIENCE FORMATTING AND LANGUAGE %%%%%
-\RequirePackage{mathtools}
 \RequirePackage{physics}
 \RequirePackage[
 	arc-separator = \,,
@@ -377,7 +376,7 @@
 
 \hypersetup{
 	colorlinks	= true,			% Colours links instead of ugly boxes
-	urlcolor	= magenta,			% Colour for external hyperlinks
+	urlcolor	= magenta,		% Colour for external hyperlinks
 	linkcolor	= magenta,		% Colour of internal links
 	citecolor	= teal			% Colour of citations
 }
@@ -489,8 +488,8 @@
 	\patchcmd{\oneparchoices}{\penalty -50\hskip 1em plus 1em\relax}{\hfill}{}{}
 
 	%%%%% SOLUTION ENVIRONMENT %%%%%
-	\SolutionEmphasis{\color{blue}}
-	\correctchoiceemphasis{\color{blue}}
+	\SolutionEmphasis{\color{Red}}
+	\correctchoiceemphasis{\color{Red}}
 	\marksnotpoints{}
 	\pointsinrightmargin{}
 	\pointsdroppedatright{}
@@ -589,14 +588,10 @@
 		\begin{center}
 			\let \footnote \thanks
 			{\LARGE \@module \\ \@title \par}
-			\vskip 1em
 				{\large
 					\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
 						\par}{
-						\begin{tabular}[t]{c}
-							\@author \\
-							\@matricno
-						\end{tabular}\par}}
+							\@author\par}}
 			\iftoggle{hasdate}{\vskip 0.5em {\@date}}{}
 		\end{center}
 		\par
