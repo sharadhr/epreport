@@ -62,7 +62,7 @@
 	\RequirePackage[T1]{fontenc}
 	\ifbool{pdftex}{\RequirePackage[utf8]{inputenc}}{}
 	\RequirePackage{mlmodern}
-	\RequirePackage{amsmath, amsfonts}
+	\RequirePackage{amsmath, amsfonts,amssymb}
 	% \pdfmapfile{=mlm-substitute.map}
 	%%%%% Define tabular-lining as nothing
 	\providerobustcmd{\tablining}{\relax}
@@ -183,7 +183,7 @@
 	detect-weight=true,
 	detect-family=true,
 	detect-mode=true,
-	range-phrase=--,
+	range-phrase= -- ,
 	range-units=single
 ]{siunitx}
 \RequirePackage[version=4]{mhchem}
@@ -308,6 +308,7 @@
 \DeclareSIUnit{\jupitermass}{\textit{M}_{J}}
 \DeclareSIUnit{\solarmass}{\textit{M}_{\astrosun}}
 \DeclareSIUnit{\atm}{atm}
+\DeclareSIUnit{\bit}{b}
 
 \providerobustcmd{\im}{\mkern0.5mu\mathrm{i}\mkern0.5mu}
 \providerobustcmd{\e}{\mkern0.5mu\mathrm{e}\mkern0.5mu}
@@ -591,7 +592,11 @@
 				{\large
 					\ifdefstring{\@author}{\@latex@warning@no@line{No \noexpand\author given}}{
 						\par}{
-							\@author\par}}
+							\ifblank{\@matricno}{\@author\par}{\begin{tabular}[t]{c}
+								\@author \\
+								\@matricno
+							\end{tabular}\par
+							}}}
 			\iftoggle{hasdate}{\vskip 0.5em {\@date}}{}
 		\end{center}
 		\par
