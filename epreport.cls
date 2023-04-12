@@ -39,7 +39,7 @@
 \newtoggle{tikzexternalise}
 \DeclareOption{tikzlibs}{\toggletrue{hastikzlibs}}
 \DeclareOption{date}{\toggletrue{hasdate}}
-\DeclareOption{bibtex}{\toggletrue{hasbib}}
+\DeclareOption{bib}{\toggletrue{hasbib}}
 \DeclareOption{apabib}{\toggletrue{apabib}}
 \DeclareOption{ieeebib}{\toggletrue{ieeebib}}
 \DeclareOption{multicol}{\toggletrue{multicol}}
@@ -62,7 +62,8 @@
 	\RequirePackage[T1]{fontenc}
 	\ifbool{pdftex}{\RequirePackage[utf8]{inputenc}}{}
 	\RequirePackage{mlmodern}
-	\RequirePackage{amsmath, amsfonts,amssymb}
+	\RequirePackage{amsmath,amsfonts,amssymb}
+	\RequirePackage{mathtools}
 	% \pdfmapfile{=mlm-substitute.map}
 	%%%%% Define tabular-lining as nothing
 	\providerobustcmd{\tablining}{\relax}
@@ -186,6 +187,10 @@
 	range-phrase= -- ,
 	range-units=single
 ]{siunitx}
+\RenewCommandCopy{\qty}{\SI}
+\ExplSyntaxOn
+\msg_redirect_name:nnn{siunitx}{physics-pkg}{none} 	
+\ExplSyntaxOff
 \RequirePackage[version=4]{mhchem}
 \RequirePackage[makeroom]{cancel}
 \RequirePackage[british]{babel}
